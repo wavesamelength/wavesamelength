@@ -1,0 +1,40 @@
+$length: 50;
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: thistle;
+}
+.wave {
+  font-family: runescape_chat_bold_07regular;
+  @include wave($length);
+}
+
+@mixin wave($length){
+  @for $i from 1 through $length {
+    .char#{$i}{
+      display: inline-block;
+      animation: wave .66s linear infinite unquote(-$i * 50 + ms);
+        //the negative animation delay means the characters all start at the same time but at different parts of the animation!
+    }
+  } 
+}
+
+@keyframes wave {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(5px);
+  }
+  50%{
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+  
