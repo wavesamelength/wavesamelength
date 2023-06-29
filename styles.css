@@ -8,28 +8,23 @@ body {
 }
 .wave .char1 {
   display: inline-block;
-  animation: wave .66s linear infinite unquote(-1 * 50 + ms);
-    //the negative animation delay means the characters all start at the same time but at different parts of the animation!
+  animation: wave .66s linear infinite -50ms;
 }
 .wave .char2 {
   display: inline-block;
-  animation: wave .66s linear infinite unquote(-2 * 50 + ms);
-    //the negative animation delay means the characters all start at the same time but at different parts of the animation!
+  animation: wave .66s linear infinite -100ms;
 }
 .wave .char3 {
   display: inline-block;
-  animation: wave .66s linear infinite unquote(-3 * 50 + ms);
-    //the negative animation delay means the characters all start at the same time but at different parts of the animation!
+  animation: wave .66s linear infinite -150ms;
 }
 .wave .char4 {
   display: inline-block;
-  animation: wave .66s linear infinite unquote(-4 * 50 + ms);
-    //the negative animation delay means the characters all start at the same time but at different parts of the animation!
+  animation: wave .66s linear infinite -200ms;
 }
 .wave .char5 {
   display: inline-block;
-  animation: wave .66s linear infinite unquote(-5 * 50 + ms);
-    //the negative animation delay means the characters all start at the same time but at different parts of the animation!
+  animation: wave .66s linear infinite -250ms;
 }
 
 @keyframes wave {
