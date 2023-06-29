@@ -5,13 +5,32 @@ body {
 }
 .wave {
   font-family: runescape_chat_bold_07regular;
-  @for $i from 1 through 50 {
-    .char#{$i}{
+
+    .char#{1}{
       display: inline-block;
-      animation: wave .66s linear infinite unquote(-$i * 50 + ms);
+      animation: wave .66s linear infinite unquote(-1 * 50 + ms);
         //the negative animation delay means the characters all start at the same time but at different parts of the animation!
     }
-  } 
+    .char#{2}{
+      display: inline-block;
+      animation: wave .66s linear infinite unquote(-2 * 50 + ms);
+        //the negative animation delay means the characters all start at the same time but at different parts of the animation!
+    }
+    .char#{3}{
+      display: inline-block;
+      animation: wave .66s linear infinite unquote(-3 * 50 + ms);
+        //the negative animation delay means the characters all start at the same time but at different parts of the animation!
+    }
+    .char#{4}{
+      display: inline-block;
+      animation: wave .66s linear infinite unquote(-4 * 50 + ms);
+        //the negative animation delay means the characters all start at the same time but at different parts of the animation!
+    }
+    .char#{5}{
+      display: inline-block;
+      animation: wave .66s linear infinite unquote(-5 * 50 + ms);
+        //the negative animation delay means the characters all start at the same time but at different parts of the animation!
+    }
 }
 
 @keyframes wave {
