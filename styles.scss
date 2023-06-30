@@ -59,6 +59,9 @@ body {
     .wave {
       font-family: runescape_chat_bold_07regular;
       @include wave($length);
+      span:first-of-type, span:last-of-type {
+        font-family: Segoe UI Symbol;
+      }
     }
   }
 }
