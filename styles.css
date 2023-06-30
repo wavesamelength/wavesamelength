@@ -17,10 +17,21 @@
     transform: translateY(0px);
   }
 }
+html, body {
+  min-height: 100vh;
+  min-width: 100vw;
+  margin: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
 body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: thistle;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: thistle;
 }
 body .wave {
   font-family: runescape_chat_bold_07regular;
