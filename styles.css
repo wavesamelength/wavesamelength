@@ -246,3 +246,6 @@ body .center-scob .wave .char50 {
   display: inline-block;
   animation: wave 0.66s linear infinite -2500ms;
 }
+body .center-scob .wave span:first-of-type, body .center-scob .wave span:last-of-type {
+  font-family: Segoe UI Symbol;
+}
