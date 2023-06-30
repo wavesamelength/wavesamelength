@@ -1,5 +1,22 @@
-// CSS built from ./styles.scss
+/* CSS built from ./styles.scss */
 
+@keyframes wave {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(5px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -207,22 +224,4 @@ body .wave .char49 {
 body .wave .char50 {
   display: inline-block;
   animation: wave 0.66s linear infinite -2500ms;
-}
-
-@keyframes wave {
-  0% {
-    transform: translateY(0);
-  }
-  25% {
-    transform: translateY(5px);
-  }
-  50% {
-    transform: translateY(0);
-  }
-  75% {
-    transform: translateY(-5px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
 }
