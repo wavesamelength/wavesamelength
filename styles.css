@@ -35,6 +35,7 @@ body {
 }
 body .center-scob {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
