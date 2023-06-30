@@ -33,206 +33,209 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-body .wave {
+body .center-scob img {
+  max-width: 30%;
+}
+body .center-scob .wave {
   font-family: runescape_chat_bold_07regular;
 }
-body .wave .char1 {
+body .center-scob .wave .char1 {
   display: inline-block;
   animation: wave 0.66s linear infinite -50ms;
 }
-body .wave .char2 {
+body .center-scob .wave .char2 {
   display: inline-block;
   animation: wave 0.66s linear infinite -100ms;
 }
-body .wave .char3 {
+body .center-scob .wave .char3 {
   display: inline-block;
   animation: wave 0.66s linear infinite -150ms;
 }
-body .wave .char4 {
+body .center-scob .wave .char4 {
   display: inline-block;
   animation: wave 0.66s linear infinite -200ms;
 }
-body .wave .char5 {
+body .center-scob .wave .char5 {
   display: inline-block;
   animation: wave 0.66s linear infinite -250ms;
 }
-body .wave .char6 {
+body .center-scob .wave .char6 {
   display: inline-block;
   animation: wave 0.66s linear infinite -300ms;
 }
-body .wave .char7 {
+body .center-scob .wave .char7 {
   display: inline-block;
   animation: wave 0.66s linear infinite -350ms;
 }
-body .wave .char8 {
+body .center-scob .wave .char8 {
   display: inline-block;
   animation: wave 0.66s linear infinite -400ms;
 }
-body .wave .char9 {
+body .center-scob .wave .char9 {
   display: inline-block;
   animation: wave 0.66s linear infinite -450ms;
 }
-body .wave .char10 {
+body .center-scob .wave .char10 {
   display: inline-block;
   animation: wave 0.66s linear infinite -500ms;
 }
-body .wave .char11 {
+body .center-scob .wave .char11 {
   display: inline-block;
   animation: wave 0.66s linear infinite -550ms;
 }
-body .wave .char12 {
+body .center-scob .wave .char12 {
   display: inline-block;
   animation: wave 0.66s linear infinite -600ms;
 }
-body .wave .char13 {
+body .center-scob .wave .char13 {
   display: inline-block;
   animation: wave 0.66s linear infinite -650ms;
 }
-body .wave .char14 {
+body .center-scob .wave .char14 {
   display: inline-block;
   animation: wave 0.66s linear infinite -700ms;
 }
-body .wave .char15 {
+body .center-scob .wave .char15 {
   display: inline-block;
   animation: wave 0.66s linear infinite -750ms;
 }
-body .wave .char16 {
+body .center-scob .wave .char16 {
   display: inline-block;
   animation: wave 0.66s linear infinite -800ms;
 }
-body .wave .char17 {
+body .center-scob .wave .char17 {
   display: inline-block;
   animation: wave 0.66s linear infinite -850ms;
 }
-body .wave .char18 {
+body .center-scob .wave .char18 {
   display: inline-block;
   animation: wave 0.66s linear infinite -900ms;
 }
-body .wave .char19 {
+body .center-scob .wave .char19 {
   display: inline-block;
   animation: wave 0.66s linear infinite -950ms;
 }
-body .wave .char20 {
+body .center-scob .wave .char20 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1000ms;
 }
-body .wave .char21 {
+body .center-scob .wave .char21 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1050ms;
 }
-body .wave .char22 {
+body .center-scob .wave .char22 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1100ms;
 }
-body .wave .char23 {
+body .center-scob .wave .char23 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1150ms;
 }
-body .wave .char24 {
+body .center-scob .wave .char24 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1200ms;
 }
-body .wave .char25 {
+body .center-scob .wave .char25 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1250ms;
 }
-body .wave .char26 {
+body .center-scob .wave .char26 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1300ms;
 }
-body .wave .char27 {
+body .center-scob .wave .char27 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1350ms;
 }
-body .wave .char28 {
+body .center-scob .wave .char28 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1400ms;
 }
-body .wave .char29 {
+body .center-scob .wave .char29 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1450ms;
 }
-body .wave .char30 {
+body .center-scob .wave .char30 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1500ms;
 }
-body .wave .char31 {
+body .center-scob .wave .char31 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1550ms;
 }
-body .wave .char32 {
+body .center-scob .wave .char32 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1600ms;
 }
-body .wave .char33 {
+body .center-scob .wave .char33 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1650ms;
 }
-body .wave .char34 {
+body .center-scob .wave .char34 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1700ms;
 }
-body .wave .char35 {
+body .center-scob .wave .char35 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1750ms;
 }
-body .wave .char36 {
+body .center-scob .wave .char36 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1800ms;
 }
-body .wave .char37 {
+body .center-scob .wave .char37 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1850ms;
 }
-body .wave .char38 {
+body .center-scob .wave .char38 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1900ms;
 }
-body .wave .char39 {
+body .center-scob .wave .char39 {
   display: inline-block;
   animation: wave 0.66s linear infinite -1950ms;
 }
-body .wave .char40 {
+body .center-scob .wave .char40 {
   display: inline-block;
   animation: wave 0.66s linear infinite -2000ms;
 }
-body .wave .char41 {
+body .center-scob .wave .char41 {
   display: inline-block;
   animation: wave 0.66s linear infinite -2050ms;
 }
-body .wave .char42 {
+body .center-scob .wave .char42 {
   display: inline-block;
   animation: wave 0.66s linear infinite -2100ms;
 }
-body .wave .char43 {
+body .center-scob .wave .char43 {
   display: inline-block;
   animation: wave 0.66s linear infinite -2150ms;
 }
-body .wave .char44 {
+body .center-scob .wave .char44 {
   display: inline-block;
   animation: wave 0.66s linear infinite -2200ms;
 }
-body .wave .char45 {
+body .center-scob .wave .char45 {
   display: inline-block;
   animation: wave 0.66s linear infinite -2250ms;
 }
-body .wave .char46 {
+body .center-scob .wave .char46 {
   display: inline-block;
   animation: wave 0.66s linear infinite -2300ms;
 }
-body .wave .char47 {
+body .center-scob .wave .char47 {
   display: inline-block;
   animation: wave 0.66s linear infinite -2350ms;
 }
-body .wave .char48 {
+body .center-scob .wave .char48 {
   display: inline-block;
   animation: wave 0.66s linear infinite -2400ms;
 }
-body .wave .char49 {
+body .center-scob .wave .char49 {
   display: inline-block;
   animation: wave 0.66s linear infinite -2450ms;
 }
-body .wave .char50 {
+body .center-scob .wave .char50 {
   display: inline-block;
   animation: wave 0.66s linear infinite -2500ms;
 }
