@@ -45,8 +45,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  .wave {
-    font-family: runescape_chat_bold_07regular;
-    @include wave($length);
+  .center-scob {
+    img {
+      max-width: 30%
+    }
+  
+    .wave {
+      font-family: runescape_chat_bold_07regular;
+      @include wave($length);
+    }
   }
 }
