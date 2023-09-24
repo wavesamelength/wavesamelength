@@ -52,7 +52,27 @@
           <span class="char43"> </span>
           <span class="char44">🎃</span>
         </div>
-        <img src="./Large-cute-ghost-outline.jpg" title="historical events/periods">
+        <button class="accordion">
+            <img src="./Large-cute-ghost-outline.jpg" title="historical events/periods">
+        </button>
+        <div class="panel">
+        <p>testy</p>
+        </div>
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    } 
+  });
+}
+</script>
     </div>
  </body>
 </html>
