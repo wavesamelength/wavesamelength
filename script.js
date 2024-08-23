@@ -11,13 +11,12 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function updateWeather() {
-    const weatherOptions = ["Sunny", "Cloudy", "Rainy", "Stormy", "Snowy"];
+    const weatherOptions = ["Heavy", "Moderate", "Low", "None"];
     const temperatureRanges = {
-        Sunny: [20, 30],
-        Cloudy: [15, 25],
-        Rainy: [10, 20],
-        Stormy: [5, 15],
-        Snowy: [-5, 5]
+        Heavy: [20, 30],
+        Moderate: [15, 25],
+        Low: [1, 20],
+        None: [0, 0.5],
     };
 
     const days = document.querySelectorAll(".day");
