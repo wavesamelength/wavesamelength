@@ -27,6 +27,6 @@ function updateWeather() {
         const randomTemp = Math.floor(Math.random() * (temperatureRange[1] - temperatureRange[0] + 1)) + temperatureRange[0];
 
         day.querySelector(".weather").textContent = randomWeather;
-        day.querySelector(".temp").textContent = `${randomTemp}°C`;
+        day.querySelector(".temp").textContent = `${randomTemp}`;
     });
 }
