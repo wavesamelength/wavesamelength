@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function updateWeather() {
-    const weatherOptions = ["Heavy", "Moderate", "Low", "None"];
+    const weatherOptions = ["Extreme", "Heavy", "Moderate", "Low"];
     const temperatureRanges = {
         Extreme: [75, 100],
         Heavy: [50, 74],
