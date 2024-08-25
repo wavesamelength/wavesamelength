@@ -13,10 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
 function updateWeather() {
     const weatherOptions = ["Heavy", "Moderate", "Low", "None"];
     const temperatureRanges = {
-        Heavy: [75-100],
-        Moderate: [50, 74],
-        Low: [25, 49],
-        'Very Low': [0, 24],
+        Extreme: [75, 100],
+        Heavy: [50, 74],
+        Moderate: [25, 49],
+        Low: [0, 24],
     };
 
     const days = document.querySelectorAll(".day");
