@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css" media="all" onload="this.media='all'">
+    <title>Welcum</title>
+  </head>
+  <body>
+    <div class="center-scob">
+        <div class="wave">
+          <span class="char1">🎃</span>
+          <span class="char2"> </span>
+          <span class="char3">c</span>
+          <span class="char4">l</span>
+          <span class="char5">i</span>
+          <span class="char6">c</span>
+          <span class="char7">k</span>
+          <span class="char8"> </span>
+          <span class="char9">o</span>
+          <span class="char10">n</span>
+          <span class="char11"> </span>
+          <span class="char12">t</span>
+          <span class="char13">h</span>
+          <span class="char14">e</span>
+          <span class="char15"> </span>
+          <span class="char16">g</span>
+          <span class="char17">h</span>
+          <span class="char18">o</span>
+          <span class="char19">s</span>
+          <span class="char20">t</span>
+          <span class="char21"> </span>
+          <span class="char22">t</span>
+          <span class="char23">o</span>
+          <span class="char24"> </span>
+          <span class="char25">r</span>
+          <span class="char26">e</span>
+          <span class="char27">v</span>
+          <span class="char28">e</span>
+          <span class="char29">a</span>
+          <span class="char30">l</span>
+          <span class="char31"> </span>
+          <span class="char32">t</span>
+          <span class="char33">h</span>
+          <span class="char34">e</span>
+          <span class="char35"> </span>
+          <span class="char36">t</span>
+          <span class="char37">h</span>
+          <span class="char38">e</span>
+          <span class="char39">m</span>
+          <span class="char40">e</span>
+          <span class="char41"> </span>
+          <span class="char42">🎃</span>
+        </div>
+        <button class="accordion">
+            <img src="./Large-cute-ghost-outline.jpg" title="historical events/periods">
+        </button>
+        <div class="panel">
+        <p style "font-size:130%;">the theme is historical events/periods!</p>
+        </div>
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    } 
+  });
+}
+</script>
+    </div>
+ </body>
+</html>
