@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="OLDstyles.css" media="all" onload="this.media='all'">
+    <title>Welcum</title>
+  </head>
+  <body>
+    <div class="center-scob">
+        <div class="wave">
+          <span class="char1"> </span>
+          <span class="char2"> </span>
+          <span class="char3">j</span>
+          <span class="char4">a</span>
+          <span class="char5">c</span>
+          <span class="char6">k</span>
+          <span class="char7">k</span>
+          <span class="char8"> </span>
+          <span class="char9">,</span>
+          <span class="char10"> </span>
+          <span class="char11">d</span>
+          <span class="char12">o</span>
+          <span class="char13"> </span>
+          <span class="char14">y</span>
+          <span class="char15">o</span>
+          <span class="char16">u</span>
+          <span class="char17"> </span>
+          <span class="char18">r</span>
+          <span class="char19">u</span>
+          <span class="char20">n</span>
+          <span class="char21">?</span>
+          <span class="char22"> </span>
+          <span class="char23"> </span>
+        </div>
+        <button class="accordion">
+            <img src="./Large-cute-ghost-outline.jpg" title="theme">
+        </button>
+        <div class="panel">
+        <p style "font-size:130%;">yes</p>
+        </div>
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    } 
+  });
+}
+</script>
