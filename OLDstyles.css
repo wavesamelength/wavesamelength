@@ -51,7 +51,7 @@ body .active, .accordion:hover {
 }
 
 body .accordion:after {
-  color: #000;
+  color: #fff;
   font-weight: bold;
   float: right;
   margin-left: 5px;
@@ -79,7 +79,8 @@ body .center-scob img {
   margin-top: 30px;
 }
 body .center-scob .wave {
-  font-family: runescape_chat_bold_07regular;
+  font-family: runescape_chat_bold_07regular
+  color: #fff;;
 }
 body .center-scob .wave .char1 {
   display: inline-block;
@@ -283,4 +284,5 @@ body .center-scob .wave .char50 {
 }
 body .center-scob .wave span:first-of-type, body .center-scob .wave span:last-of-type {
   font-family: Segoe UI Symbol;
+  color: #fff;
 }
