@@ -76,3 +76,14 @@ h1 {
   color: #555;
   font-style: italic;
 }
+
+/* stack panels in one column */
+@media (max-width: 768px) {
+  .panel-container {
+    grid-template-columns: 1fr;
+  }
+
+  .placeholder {
+    height: 200px; /* slightly taller for better mobile look */
+  }
+}
