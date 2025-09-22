@@ -29,12 +29,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: white;
+  background-color: #FC5200;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 body .accordion {
-  background-color: #fff;
+  background-color: #FC5200;
   color: #000;
   cursor: pointer;
   padding: 18px;
@@ -47,7 +47,7 @@ body .accordion {
 }
 
 body .active, .accordion:hover {
-  background-color: #fff;
+  background-color: #FC5200;
 }
 
 body .accordion:after {
@@ -58,12 +58,12 @@ body .accordion:after {
 }
 
 body .active:after {
-  background-color: #fff;
+  background-color: #FC5200;
 }
 
 body .panel {
   padding: 0 18px;
-  background-color: white;
+  background-color: #FC5200;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
