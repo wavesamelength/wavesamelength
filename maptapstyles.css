@@ -1,0 +1,608 @@
+/* =========================
+   MAPTAP LEAGUE STYLES
+   ========================= */
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+
+    margin: 0;
+
+    font-family:
+        Inter,
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #111827,
+            #1f2937
+        );
+
+    color: #f9fafb;
+
+    min-height: 100vh;
+
+}
+
+
+
+/* HEADER */
+
+header {
+
+    text-align: center;
+
+    padding: 40px 20px 20px;
+
+}
+
+
+header h1 {
+
+    margin: 0;
+
+    font-size: 42px;
+
+    letter-spacing: 2px;
+
+}
+
+
+#week-title {
+
+    color: #9ca3af;
+
+    font-size: 18px;
+
+}
+
+
+
+
+
+/* MAIN */
+
+main {
+
+    width: 95%;
+
+    max-width: 900px;
+
+    margin: auto;
+
+    padding-bottom: 40px;
+
+}
+
+
+
+
+
+/* CARDS */
+
+
+.card,
+.winner-card {
+
+    background:
+
+        rgba(
+            255,
+            255,
+            255,
+            0.08
+        );
+
+
+    backdrop-filter: blur(10px);
+
+
+    border-radius: 18px;
+
+
+    padding: 25px;
+
+
+    margin-bottom: 25px;
+
+
+    box-shadow:
+
+        0 10px 30px
+        rgba(
+            0,
+            0,
+            0,
+            0.25
+        );
+
+
+}
+
+
+
+.card h2 {
+
+    margin-top: 0;
+
+    font-size: 24px;
+
+}
+
+
+
+
+
+/* WINNER */
+
+.winner-card {
+
+    text-align: center;
+
+    border:
+
+        2px solid
+        #fbbf24;
+
+
+    background:
+
+        linear-gradient(
+
+            135deg,
+
+            rgba(
+                251,
+                191,
+                36,
+                0.25
+            ),
+
+            rgba(
+                255,
+                255,
+                255,
+                0.05
+            )
+
+        );
+
+}
+
+
+.winner-card h1 {
+
+    font-size: 48px;
+
+    margin: 10px;
+
+}
+
+
+.hidden {
+
+    display: none;
+
+}
+
+
+
+
+
+/* TABLE */
+
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+
+
+th {
+
+    text-align: left;
+
+    color:
+
+        #9ca3af;
+
+
+    padding:
+
+        12px;
+
+}
+
+
+td {
+
+    padding:
+
+        14px 12px;
+
+
+    border-bottom:
+
+        1px solid
+
+        rgba(
+            255,
+            255,
+            255,
+            0.1
+        );
+
+}
+
+
+
+tbody tr {
+
+    transition:
+
+        transform
+        .2s ease;
+
+}
+
+
+
+tbody tr:hover {
+
+    transform:
+
+        translateX(5px);
+
+}
+
+
+
+
+
+/* MEDALS */
+
+
+tbody tr:nth-child(1) {
+
+    background:
+
+        rgba(
+            251,
+            191,
+            36,
+            0.15
+        );
+
+    font-weight: bold;
+
+}
+
+
+
+tbody tr:nth-child(2) {
+
+    background:
+
+        rgba(
+            156,
+            163,
+            175,
+            0.15
+        );
+
+}
+
+
+
+tbody tr:nth-child(3) {
+
+    background:
+
+        rgba(
+            180,
+            83,
+            9,
+            0.15
+        );
+
+}
+
+
+
+
+
+
+/* RESULT INPUTS */
+
+
+.result-row {
+
+    display:
+
+        flex;
+
+
+    align-items:
+
+        center;
+
+
+    gap:
+
+        15px;
+
+
+    margin-bottom:
+
+        12px;
+
+}
+
+
+
+.result-row label {
+
+    width:
+
+        70px;
+
+
+    font-size:
+
+        20px;
+
+}
+
+
+
+select {
+
+    flex:
+
+        1;
+
+
+    padding:
+
+        12px;
+
+
+    border-radius:
+
+        10px;
+
+
+    border:
+
+        none;
+
+
+    background:
+
+        #374151;
+
+
+    color:
+
+        white;
+
+
+    font-size:
+
+        16px;
+
+}
+
+
+
+
+
+/* BUTTON */
+
+
+button {
+
+
+    width:
+
+        100%;
+
+
+    padding:
+
+        15px;
+
+
+    border:
+
+        none;
+
+
+    border-radius:
+
+        12px;
+
+
+    margin-top:
+
+        20px;
+
+
+    background:
+
+        linear-gradient(
+
+            135deg,
+
+            #22c55e,
+
+            #16a34a
+
+        );
+
+
+    color:
+
+        white;
+
+
+    font-size:
+
+        18px;
+
+
+    font-weight:
+
+        bold;
+
+
+    cursor:
+
+        pointer;
+
+
+    transition:
+
+        transform
+        .2s;
+
+}
+
+
+
+button:hover {
+
+    transform:
+
+        scale(
+            1.03
+        );
+
+}
+
+
+
+
+
+
+/* HISTORY */
+
+
+#history {
+
+    line-height:
+
+        1.8;
+
+    color:
+
+        #d1d5db;
+
+}
+
+
+
+
+
+
+/* FOOTER */
+
+
+footer {
+
+    text-align:
+
+        center;
+
+
+    color:
+
+        #6b7280;
+
+
+    padding:
+
+        30px;
+
+}
+
+
+
+
+
+
+
+/* MOBILE */
+
+
+@media
+(max-width:600px){
+
+
+header h1 {
+
+    font-size:
+
+        30px;
+
+}
+
+
+
+.card,
+.winner-card {
+
+    padding:
+
+        18px;
+
+}
+
+
+
+.winner-card h1 {
+
+    font-size:
+
+        36px;
+
+}
+
+
+
+.result-row {
+
+    flex-direction:
+
+        column;
+
+
+    align-items:
+
+        stretch;
+
+}
+
+
+
+.result-row label {
+
+    width:
+
+        auto;
+
+}
+
+
+}
