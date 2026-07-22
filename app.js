@@ -408,7 +408,222 @@ async function calculateLeaderboard(results){
     checkWinner(
         sorted
     );
+// ======================================
+// PREVIOUS WINNERS HISTORY
+// ======================================
 
+
+async function loadPreviousWinners(){
+
+
+    const historyDiv =
+        document.getElementById(
+            "history"
+        );
+
+
+
+    const snapshot =
+        await getDocs(
+            collection(
+                db,
+                "results"
+            )
+        );
+
+
+
+    const weeks = {};
+
+
+
+    const currentWeek =
+        getLeagueWeek();
+
+
+
+
+    snapshot.forEach(result=>{
+
+
+        const data =
+            result.data();
+
+
+
+        if(
+            data.week === currentWeek
+        ){
+
+            return;
+
+        }
+
+
+
+        if(
+            !weeks[data.week]
+        ){
+
+            weeks[data.week] = [];
+
+        }
+
+
+
+        weeks[data.week]
+        .push(data);
+
+
+
+    });
+
+
+
+
+
+    historyDiv.innerHTML = "";
+
+
+
+    const weekEntries =
+        Object.entries(
+            weeks
+        )
+        .sort(
+            (a,b)=>
+            new Date(b[0])
+            -
+            new Date(a[0])
+        );
+
+
+
+
+
+    if(
+        weekEntries.length === 0
+    ){
+
+        historyDiv.innerHTML =
+        `
+        No completed weeks yet 🗺️
+        `;
+
+
+        return;
+
+    }
+
+
+
+
+
+    weekEntries.forEach(
+        ([week,results])=>{
+
+
+            let scores = {};
+
+
+
+            players.forEach(player=>{
+
+                scores[player]=0;
+
+            });
+
+
+
+
+
+            results.forEach(day=>{
+
+
+                day.placements
+                .forEach(
+                    (player,index)=>{
+
+
+                        scores[player]
+                        +=
+                        POINTS[index];
+
+
+                    }
+                );
+
+
+            });
+
+
+
+
+
+            const winner =
+
+                Object.entries(scores)
+
+                .sort(
+                    (a,b)=>
+                    b[1]-a[1]
+                )[0];
+
+
+
+
+
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+
+            card.className =
+                "history-item";
+
+
+
+            card.innerHTML = `
+
+
+            <strong>
+            Week starting ${week}
+            </strong>
+
+
+            <br>
+
+
+            🏆 ${winner[0]}
+
+
+            <br>
+
+
+            ${winner[1]} points
+
+
+            <hr>
+
+
+            `;
+
+
+
+            historyDiv.appendChild(card);
+
+
+
+        }
+
+    );
+
+
+}
 
 }
 
@@ -439,6 +654,220 @@ async function calculateLeaderboard(results){
     checkWinner(
         sorted
     );
+// ======================================
+// PREVIOUS WINNERS HISTORY
+// ======================================
+
+
+async function loadPreviousWinners(){
+
+
+    const historyDiv =
+        document.getElementById(
+            "history"
+        );
+
+
+
+    const snapshot =
+        await getDocs(
+            collection(
+                db,
+                "results"
+            )
+        );
+
+
+
+    const weeks = {};
+
+
+
+    const currentWeek =
+        getLeagueWeek();
+
+
+
+
+    snapshot.forEach(result=>{
+
+
+        const data =
+            result.data();
+
+
+
+        if(
+            data.week === currentWeek
+        ){
+
+            return;
+
+        }
+
+
+
+        if(
+            !weeks[data.week]
+        ){
+
+            weeks[data.week] = [];
+
+        }
+
+
+
+        weeks[data.week]
+        .push(data);
+
+
+
+    });
+
+
+
+
+
+    historyDiv.innerHTML = "";
+
+
+
+    const weekEntries =
+        Object.entries(
+            weeks
+        )
+        .sort(
+            (a,b)=>
+            new Date(b[0])
+            -
+            new Date(a[0])
+        );
+
+
+
+
+
+    if(
+        weekEntries.length === 0
+    ){
+
+        historyDiv.innerHTML =
+        `
+        No completed weeks yet 🗺️
+        `;
+
+
+        return;
+
+    }
+
+
+
+
+
+    weekEntries.forEach(
+        ([week,results])=>{
+
+
+            let scores = {};
+
+
+
+            players.forEach(player=>{
+
+                scores[player]=0;
+
+            });
+
+
+
+
+
+            results.forEach(day=>{
+
+
+                day.placements
+                .forEach(
+                    (player,index)=>{
+
+
+                        scores[player]
+                        +=
+                        POINTS[index];
+
+
+                    }
+                );
+
+
+            });
+
+
+
+
+
+            const winner =
+
+                Object.entries(scores)
+
+                .sort(
+                    (a,b)=>
+                    b[1]-a[1]
+                )[0];
+
+
+
+
+
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+
+            card.className =
+                "history-item";
+
+
+
+            card.innerHTML = `
+
+
+            <strong>
+            Week starting ${week}
+            </strong>
+
+
+            <br>
+
+
+            🏆 ${winner[0]}
+
+
+            <br>
+
+
+            ${winner[1]} points
+
+
+            <hr>
+
+
+            `;
+
+
+
+            historyDiv.appendChild(card);
+
+
+
+        }
+
+    );
+
 
 }
 
