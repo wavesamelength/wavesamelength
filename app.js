@@ -1073,3 +1073,5 @@ function getLeagueWeek(){
 loadPlayers();
 
 listenForResults();
+
+loadPreviousWinners();
