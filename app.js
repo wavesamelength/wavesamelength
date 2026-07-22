@@ -339,14 +339,16 @@ async function calculateLeaderboard(results){
     let scores = {};
 
 
-
     players.forEach(player=>{
 
-        scores[player]=0;
+        scores[player] = 0;
 
     });
 
 
+
+    const currentWeek =
+        getLeagueWeek();
 
 
 
@@ -355,6 +357,15 @@ async function calculateLeaderboard(results){
 
         const data =
             result.data();
+
+
+
+        // Only count current week
+        if(
+            data.week !== currentWeek
+        ){
+            return;
+        }
 
 
 
@@ -371,6 +382,35 @@ async function calculateLeaderboard(results){
             }
         );
 
+
+    });
+
+
+
+
+    const sorted =
+
+        Object.entries(scores)
+
+        .sort(
+            (a,b)=>
+            b[1]-a[1]
+        );
+
+
+
+    renderLeaderboard(
+        sorted
+    );
+
+
+
+    checkWinner(
+        sorted
+    );
+
+
+}
 
 
     });
@@ -548,38 +588,44 @@ document
 // ======================================
 
 
-function getWeekNumber(date){
+function getLeagueWeek(){
+
+    const now = new Date();
 
 
-const start =
-new Date(
-date.getFullYear(),
-0,
-1
-);
+    //
+    // Wednesday is the start
+    // of a new MapTap week
+    //
 
-
-const diff =
-date -
-start;
+    const day =
+        now.getDay();
 
 
 
-return Math.ceil(
-(
-(
-diff /
-86400000
-)
-+
-start.getDay()
-+
-1
-)
-/
-7
-);
+    const daysSinceWednesday =
+        (
+            day + 5
+        ) % 7;
 
+
+
+    const weekStart =
+        new Date(now);
+
+
+
+    weekStart.setDate(
+        now.getDate()
+        -
+        daysSinceWednesday
+    );
+
+
+
+    return weekStart
+        .toISOString()
+        .split("T")[0];
 
 }
 
