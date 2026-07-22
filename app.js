@@ -11,6 +11,19 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 // ======================================
+// WEEK TITLE
+// ======================================
+function updateWeekTitle() {
+    const weekTitle = document.getElementById("week-title");
+
+    if (!weekTitle) {
+        return;
+    }
+
+    weekTitle.textContent = `Week starting ${getLeagueWeek()}`;
+}
+
+// ======================================
 // SETTINGS
 // ======================================
 const POINTS = [9, 8, 7, 6, 5, 4, 3, 2, 1];
@@ -249,3 +262,4 @@ function getLeagueWeek() {
 loadPlayers();
 listenForResults();
 loadPreviousWinners();
+updateWeekTitle();
