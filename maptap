@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MapTap League 🗺️</title>
+
+    <link rel="stylesheet" href="maptapstyle.css">
+
+    <!-- Firebase -->
+    <script type="module" src="firebase.js"></script>
+
+</head>
+
+<body>
+
+<header>
+    <h1>🗺️ MAPTAP LEAGUE</h1>
+    <p id="week-title">
+        Loading week...
+    </p>
+</header>
+
+
+<main>
+
+
+<section class="winner-card hidden" id="winner-card">
+
+    <h2>🏆 Weekly Winner</h2>
+
+    <h1 id="winner-name">
+        -
+    </h1>
+
+    <p id="winner-score">
+        -
+    </p>
+
+</section>
+
+
+
+<section class="card">
+
+<h2>
+    Current Standings
+</h2>
+
+
+<table>
+
+<thead>
+
+<tr>
+<th>
+Position
+</th>
+
+<th>
+Player
+</th>
+
+<th>
+Points
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="leaderboard">
+
+<tr>
+<td colspan="3">
+Loading...
+</td>
+</tr>
+
+</tbody>
+
+
+</table>
+
+</section>
+
+
+
+
+
+<section class="card">
+
+<h2>
+Today's Results
+</h2>
+
+
+<div id="result-entry">
+
+<p>
+Loading players...
+</p>
+
+
+</div>
+
+
+<button id="save-results">
+💾 Save Results
+</button>
+
+
+</section>
+
+
+
+
+
+<section class="card">
+
+<h2>
+Previous Winners
+</h2>
+
+
+<div id="history">
+
+Loading history...
+
+</div>
+
+
+</section>
+
+
+
+</main>
+
+
+
+<footer>
+
+<p>
+MapTap League © 2026
+</p>
+
+</footer>
+
+
+
+<script type="module" src="app.js"></script>
+
+
+</body>
+</html>
