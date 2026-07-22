@@ -628,7 +628,7 @@ async function loadPreviousWinners(){
 }
 
 
-    );
+;
 
 
 
