@@ -41,7 +41,30 @@ async function loadPlayers() {
         players.push(playerDoc.id);
     });
 
-    createResultInputs();
+    function createResultInputs() {
+    const container = document.getElementById("result-entry");
+
+    container.innerHTML = "";
+
+    players.forEach(player => {
+
+        const row = document.createElement("div");
+
+        row.className = "result-row";
+
+        row.innerHTML = `
+            <label>${player}</label>
+            <input
+                type="number"
+                class="player-score"
+                data-player="${player}"
+                placeholder="Enter score"
+            >
+        `;
+
+        container.appendChild(row);
+    });
+}
 }
 
 // ======================================
@@ -72,31 +95,60 @@ function createResultInputs() {
 // ======================================
 // SAVE DAILY RESULTS
 // ======================================
-document.getElementById('save-results').addEventListener('click', async () => {
-    const selections = [...document.querySelectorAll('.player-select')].map(
-        select => select.value
-    );
+document.getElementById("save-results").addEventListener(
+    "click",
+    async () => {
 
-    if (selections.includes('')) {
-        alert('Please choose every position');
-        return;
+        const scores = [];
+
+        document.querySelectorAll(".player-score").forEach(input => {
+
+            const value = input.value.trim();
+
+            if (value === "") {
+                return;
+            }
+
+            scores.push({
+                player: input.dataset.player,
+                score: Number(value)
+            });
+
+        });
+
+        if (scores.length !== players.length) {
+            alert("Please enter a score for every player");
+            return;
+        }
+
+        scores.sort((a, b) => b.score - a.score);
+
+        const placements = scores.map(
+            entry => entry.player
+        );
+
+        const today =
+            new Date()
+                .toISOString()
+                .split("T")[0];
+
+        await setDoc(
+            doc(
+                db,
+                "results",
+                today
+            ),
+            {
+                date: today,
+                week: getLeagueWeek(),
+                placements,
+                scores
+            }
+        );
+
+        alert("Results saved!");
     }
-
-    if (new Set(selections).size !== selections.length) {
-        alert('A player cannot appear twice');
-        return;
-    }
-
-    const today = new Date().toISOString().split('T')[0];
-
-    await setDoc(doc(db, 'results', today), {
-        date: today,
-        placements: selections,
-        week: getLeagueWeek()
-    });
-
-    alert('Results saved!');
-});
+);
 
 // ======================================
 // LIVE LEADERBOARD
