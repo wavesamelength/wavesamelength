@@ -288,6 +288,24 @@ button:disabled {
     background: rgba(255, 255, 255, 0.04);
 }
 
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #9ca3af;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.rank-badge-empty {
+    background: transparent;
+}
+
 .entry-name {
     flex: 1;
     font-size: 16px;
