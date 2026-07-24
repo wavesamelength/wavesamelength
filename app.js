@@ -325,22 +325,39 @@ function renderTodayEntries() {
 
     const today = todayStr();
     const todayEntries = entriesForDate(today);
-    const enteredMap = new Map(todayEntries.map(e => [e.player, e.score]));
+    const enteredPlayers = new Set(todayEntries.map(e => e.player));
+
+    // Rank whoever's entered so far (live, before the day is finalized).
+    const ranked = rankDay(todayEntries);
+    const pending = players
+        .filter(player => !enteredPlayers.has(player))
+        .sort((a, b) => a.localeCompare(b));
 
     container.innerHTML = "";
 
-    players.forEach(player => {
+    ranked.forEach(({ player, score, rank }) => {
         const row = document.createElement("div");
         row.className = "entry-row";
 
-        const hasEntered = enteredMap.has(player);
-
         row.innerHTML = `
+            <span class="rank-badge">#${rank}</span>
             ${avatarHtml(player)}
             <span class="entry-name">${player}</span>
-            ${hasEntered
-                ? `<span class="status-pill status-done">✅ ${enteredMap.get(player)}</span>`
-                : `<span class="status-pill status-pending">⏳ Pending</span>`}
+            <span class="status-pill status-done">✅ ${score}</span>
+        `;
+
+        container.appendChild(row);
+    });
+
+    pending.forEach(player => {
+        const row = document.createElement("div");
+        row.className = "entry-row";
+
+        row.innerHTML = `
+            <span class="rank-badge rank-badge-empty"></span>
+            ${avatarHtml(player)}
+            <span class="entry-name">${player}</span>
+            <span class="status-pill status-pending">⏳ Pending</span>
         `;
 
         container.appendChild(row);
