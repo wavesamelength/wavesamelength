@@ -20,6 +20,9 @@ import {
 // Points awarded by rank (index 0 = 1st place). Index 9 = last of 10.
 const POINTS = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
 
+// MapTap final scores don't go above 1000 - anything higher means a mis-paste/typo.
+const MAX_SCORE = 1000;
+
 let players = [];          // all league players, alphabetical
 let results = [];          // every score doc ever submitted: { date, player, score }
 let selectedPlayer = "";   // whoever is currently chosen in the dropdown
@@ -198,6 +201,9 @@ function initEntryForm() {
         } else if (score === null) {
             preview.textContent = "Couldn't find a score in that text — paste your MapTap share text, or just type the number.";
             preview.className = "score-preview error";
+        } else if (score > MAX_SCORE) {
+            preview.textContent = `A score of ${score} is higher than MapTap allows (max ${MAX_SCORE}) — check what you pasted.`;
+            preview.className = "score-preview error";
         } else {
             preview.textContent = `Detected score: ${score} 🎯`;
             preview.className = "score-preview success";
@@ -255,6 +261,12 @@ async function submitScore() {
 
     if (score === null) {
         message.textContent = "Couldn't find a score in that text — paste your MapTap share text, or just type the number.";
+        message.className = "entry-message error";
+        return;
+    }
+
+    if (score > MAX_SCORE) {
+        message.textContent = `A score of ${score} is higher than MapTap allows (max ${MAX_SCORE}) — check what you pasted.`;
         message.className = "entry-message error";
         return;
     }
@@ -337,7 +349,8 @@ function renderTodayEntries() {
 
 // ======================================
 // COMPETITION-STYLE RANKING
-// (ties share the higher points, next rank is skipped)
+// (ties share the same points; the next distinct score is only worth
+// one point less, regardless of how many players tied above it)
 // ======================================
 
 function rankDay(entries) {
@@ -345,19 +358,21 @@ function rankDay(entries) {
     const ranked = [];
 
     let i = 0;
+    let groupIndex = 0;
     while (i < sorted.length) {
         let j = i;
         while (j + 1 < sorted.length && sorted[j + 1].score === sorted[i].score) {
             j++;
         }
 
-        const points = POINTS[i] ?? 0;
+        const points = POINTS[groupIndex] ?? 0;
 
         for (let k = i; k <= j; k++) {
-            ranked.push({ player: sorted[k].player, score: sorted[k].score, rank: i + 1, points });
+            ranked.push({ player: sorted[k].player, score: sorted[k].score, rank: groupIndex + 1, points });
         }
 
         i = j + 1;
+        groupIndex++;
     }
 
     return ranked;
