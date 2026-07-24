@@ -332,19 +332,24 @@ button:disabled {
 /* HISTORY */
 
 #history {
-    line-height: 1.8;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     color: #d1d5db;
 }
 
-.history-item {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 15px;
+.win-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
     border-radius: 12px;
-    margin-bottom: 12px;
-    font-size: 17px;
+    background: rgba(255, 255, 255, 0.04);
 }
 
-.history-item strong {
+.win-count {
+    margin-left: auto;
+    font-weight: 700;
     color: #fbbf24;
 }
 
