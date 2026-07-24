@@ -26,6 +26,7 @@ const MAX_SCORE = 1000;
 let players = [];          // all league players, alphabetical
 let results = [];          // every score doc ever submitted: { date, player, score }
 let selectedPlayer = "";   // whoever is currently chosen in the dropdown
+let legacyWins = {};       // baseline weekly-win counts from before this site existed
 
 // ======================================
 // DATE / WEEK HELPERS
@@ -135,6 +136,12 @@ async function loadPlayers() {
     players.sort((a, b) => a.localeCompare(b));
 
     populatePlayerSelect();
+}
+
+// One-off baseline of weekly wins racked up before this site tracked them.
+async function loadLegacyWins() {
+    const snap = await getDoc(doc(db, "meta", "legacyWins"));
+    legacyWins = snap.exists() ? snap.data() : {};
 }
 
 function populatePlayerSelect() {
@@ -501,38 +508,43 @@ function renderPreviousWinners() {
 
     const currentWeek = getLeagueWeek();
 
-    const weeksWithResults = new Set(
+    const pastWeeks = new Set(
         results
             .map(r => getLeagueWeek(r.date))
             .filter(week => week !== currentWeek)
     );
 
-    const weeks = [...weeksWithResults].sort((a, b) => new Date(b) - new Date(a));
+    const winCounts = { ...legacyWins };
+
+    pastWeeks.forEach(week => {
+        const winner = computeWeekStandings(week)[0];
+        if (!winner || winner.points === 0) return;
+
+        winCounts[winner.player] = (winCounts[winner.player] || 0) + 1;
+    });
+
+    const tally = Object.entries(winCounts)
+        .filter(([, count]) => count > 0)
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 
     historyDiv.innerHTML = "";
 
-    if (weeks.length === 0) {
+    if (tally.length === 0) {
         historyDiv.innerHTML = "No completed weeks yet 🗺️";
         return;
     }
 
-    weeks.forEach(week => {
-        const standings = computeWeekStandings(week);
-        const winner = standings[0];
+    tally.forEach(([player, count]) => {
+        const row = document.createElement("div");
+        row.className = "win-row";
 
-        if (!winner || winner.points === 0) return;
-
-        const card = document.createElement("div");
-        card.className = "history-item";
-
-        card.innerHTML = `
-            <strong>Week of ${formatDate(week)} – ${formatDate(addDays(week, 6))}</strong><br>
-            🏆 ${winner.player}<br>
-            ${winner.points} points
-            <hr>
+        row.innerHTML = `
+            ${avatarHtml(player)}
+            <span class="entry-name">${player}</span>
+            <span class="win-count">🏆 ${count} win${count === 1 ? "" : "s"}</span>
         `;
 
-        historyDiv.appendChild(card);
+        historyDiv.appendChild(row);
     });
 }
 
@@ -542,7 +554,7 @@ function renderPreviousWinners() {
 
 async function start() {
     updateWeekTitle();
-    await loadPlayers();
+    await Promise.all([loadPlayers(), loadLegacyWins()]);
     initEntryForm();
     listenForResults();
 }
