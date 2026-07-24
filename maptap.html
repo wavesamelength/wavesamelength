@@ -11,7 +11,7 @@
     <!-- Firebase -->
     <script type="module" src="firebase.js"></script>
 
-<script type="module" src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </head>
 <body>
 
@@ -29,6 +29,35 @@
     </section>
 
     <section class="card">
+        <h2>Enter Today's Score</h2>
+
+        <div class="entry-form">
+            <label for="player-select">Who are you?</label>
+            <select id="player-select">
+                <option value="" disabled selected>Loading players...</option>
+            </select>
+
+            <label for="score-paste">Paste your score</label>
+            <textarea
+                id="score-paste"
+                rows="3"
+                placeholder="Paste your MapTap share text here, or just type your final score"
+            ></textarea>
+
+            <div id="score-preview" class="score-preview hidden"></div>
+
+            <button id="submit-score">📋 Submit Score</button>
+
+            <p id="entry-message" class="entry-message"></p>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Today's Entries</h2>
+        <div id="today-entries">Loading players...</div>
+    </section>
+
+    <section class="card">
         <h2>Current Standings</h2>
 
         <table>
@@ -37,27 +66,16 @@
                     <th>Position</th>
                     <th>Player</th>
                     <th>Points</th>
+                    <th>Played</th>
                 </tr>
             </thead>
 
             <tbody id="leaderboard">
                 <tr>
-                    <td colspan="3">Loading...</td>
+                    <td colspan="4">Loading...</td>
                 </tr>
             </tbody>
         </table>
-    </section>
-
-    <section class="card">
-        <h2>Today's Scores</h2>
-
-        <div id="result-entry">
-            Loading players...
-        </div>
-
-        <button id="save-results">
-            💾 Save Results
-        </button>
     </section>
 
     <section class="card">
