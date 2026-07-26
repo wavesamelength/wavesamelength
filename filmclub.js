@@ -149,7 +149,8 @@ const FILM_QUOTES = [
     { quote: "No capes!", movie: "The Incredibles", year: 2004 },
     { quote: "Stay classy, San Diego.", movie: "Anchorman: The Legend of Ron Burgundy", year: 2004 },
     { quote: "Blue Steel.", movie: "Zoolander", year: 2001 },
-    { quote: "Shake and bake!", movie: "Talladega Nights: The Ballad of Ricky Bobby", year: 2006 }
+    { quote: "Shake and bake!", movie: "Talladega Nights: The Ballad of Ricky Bobby", year: 2006 },
+    { quote: "it's morbin' time!", movie: "Morbius", year: 2022 }
 ];
 
 function renderRandomQuote() {
