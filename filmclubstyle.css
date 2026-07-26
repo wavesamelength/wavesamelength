@@ -366,15 +366,6 @@ input[type="text"]:focus {
     background: linear-gradient(160deg, rgba(58, 20, 24, 0.5), rgba(0, 0, 0, 0.2));
 }
 
-.film-card .film-poster-wrap,
-.film-card .film-card-details {
-    display: flex;
-}
-
-.film-card {
-    flex-direction: column;
-}
-
 .marquee-tag {
     align-self: center;
     background: var(--maroon);
