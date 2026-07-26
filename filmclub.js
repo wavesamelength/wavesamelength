@@ -27,6 +27,18 @@ import {
 
 const OMDB_API_KEY = "8e950e92";
 
+// Pre-agreed chooser for a specific month, bypassing the random draw.
+// Add entries here as needed; every other month falls back to random.
+const FORCED_CHOOSERS = {
+    "2026-07": "Jack"
+};
+
+// A month in here reuses another month's whole pick (chooser + film)
+// instead of drawing/searching again - e.g. July's film running into August.
+const CARRY_OVER_PICKS = {
+    "2026-08": "2026-07"
+};
+
 // ======================================
 // STATE
 // ======================================
@@ -61,6 +73,91 @@ function addMonths(monthStr, delta) {
 function monthLabel(monthStr) {
     const [y, m] = monthStr.split("-").map(Number);
     return new Date(y, m - 1, 1).toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+}
+
+// ======================================
+// FILM QUOTES (tagline)
+// ======================================
+
+const FILM_QUOTES = [
+    { quote: "D'ya like jazz?", movie: "Bee Movie", year: 2007 },
+    { quote: "I'll be back.", movie: "The Terminator", year: 1984 },
+    { quote: "Why so serious?", movie: "The Dark Knight", year: 2008 },
+    { quote: "Just keep swimming.", movie: "Finding Nemo", year: 2003 },
+    { quote: "You can't handle the truth!", movie: "A Few Good Men", year: 1992 },
+    { quote: "I feel the need... the need for speed.", movie: "Top Gun", year: 1986 },
+    { quote: "Here's looking at you, kid.", movie: "Casablanca", year: 1942 },
+    { quote: "May the Force be with you.", movie: "Star Wars", year: 1977 },
+    { quote: "Life is like a box of chocolates.", movie: "Forrest Gump", year: 1994 },
+    { quote: "To infinity and beyond!", movie: "Toy Story", year: 1995 },
+    { quote: "I see dead people.", movie: "The Sixth Sense", year: 1999 },
+    { quote: "You're gonna need a bigger boat.", movie: "Jaws", year: 1975 },
+    { quote: "Houston, we have a problem.", movie: "Apollo 13", year: 1995 },
+    { quote: "There's no place like home.", movie: "The Wizard of Oz", year: 1939 },
+    { quote: "Nobody puts Baby in a corner.", movie: "Dirty Dancing", year: 1987 },
+    { quote: "I'm king of the world!", movie: "Titanic", year: 1997 },
+    { quote: "Not all those who wander are lost.", movie: "The Fellowship of the Ring", year: 2001 },
+    { quote: "Great Scott!", movie: "Back to the Future", year: 1985 },
+    { quote: "Hasta la vista, baby.", movie: "Terminator 2: Judgment Day", year: 1991 },
+    { quote: "After all, tomorrow is another day!", movie: "Gone with the Wind", year: 1939 },
+    { quote: "Bond. James Bond.", movie: "Dr. No", year: 1962 },
+    { quote: "No, I am your father.", movie: "The Empire Strikes Back", year: 1980 },
+    { quote: "I'm gonna make him an offer he can't refuse.", movie: "The Godfather", year: 1972 },
+    { quote: "Here's Johnny!", movie: "The Shining", year: 1980 },
+    { quote: "You talkin' to me?", movie: "Taxi Driver", year: 1976 },
+    { quote: "E.T. phone home.", movie: "E.T. the Extra-Terrestrial", year: 1982 },
+    { quote: "My precious.", movie: "The Lord of the Rings: The Two Towers", year: 2002 },
+    { quote: "Wax on, wax off.", movie: "The Karate Kid", year: 1984 },
+    { quote: "Show me the money!", movie: "Jerry Maguire", year: 1996 },
+    { quote: "You can't sit with us.", movie: "Mean Girls", year: 2004 },
+    { quote: "That'll do, pig. That'll do.", movie: "Babe", year: 1995 },
+    { quote: "Hakuna Matata.", movie: "The Lion King", year: 1994 },
+    { quote: "Let it go.", movie: "Frozen", year: 2013 },
+    { quote: "There's no crying in baseball!", movie: "A League of Their Own", year: 1992 },
+    { quote: "It's alive! It's alive!", movie: "Frankenstein", year: 1931 },
+    { quote: "Fasten your seatbelts, it's going to be a bumpy night.", movie: "All About Eve", year: 1950 },
+    { quote: "Elementary, my dear Watson.", movie: "The Adventures of Sherlock Holmes", year: 1939 },
+    { quote: "Toga! Toga!", movie: "National Lampoon's Animal House", year: 1978 },
+    { quote: "I'll have what she's having.", movie: "When Harry Met Sally...", year: 1989 },
+    { quote: "Snap out of it!", movie: "Moonstruck", year: 1987 },
+    { quote: "Carpe diem. Seize the day.", movie: "Dead Poets Society", year: 1989 },
+    { quote: "Is it safe?", movie: "Marathon Man", year: 1976 },
+    { quote: "They call me Mister Tibbs!", movie: "In the Heat of the Night", year: 1967 },
+    { quote: "A martini. Shaken, not stirred.", movie: "Goldfinger", year: 1964 },
+    { quote: "Adrian!", movie: "Rocky", year: 1976 },
+    { quote: "Yippee-ki-yay.", movie: "Die Hard", year: 1988 },
+    { quote: "I have a very particular set of skills.", movie: "Taken", year: 2008 },
+    { quote: "Keep your friends close, and your enemies closer.", movie: "The Godfather Part II", year: 1974 },
+    { quote: "I'm gonna live forever!", movie: "Fame", year: 1980 },
+    { quote: "If you build it, he will come.", movie: "Field of Dreams", year: 1989 },
+    { quote: "Life finds a way.", movie: "Jurassic Park", year: 1993 },
+    { quote: "There is no spoon.", movie: "The Matrix", year: 1999 },
+    { quote: "Surely you can't be serious. I am serious, and don't call me Shirley.", movie: "Airplane!", year: 1980 },
+    { quote: "Who you gonna call?", movie: "Ghostbusters", year: 1984 },
+    { quote: "Welcome to Earth.", movie: "Independence Day", year: 1996 },
+    { quote: "What we've got here is failure to communicate.", movie: "Cool Hand Luke", year: 1967 },
+    { quote: "Well, Clarice, have the lambs stopped screaming?", movie: "The Silence of the Lambs", year: 1991 },
+    { quote: "I'm just a girl, standing in front of a boy, asking him to love her.", movie: "Notting Hill", year: 1999 },
+    { quote: "Big mistake. Big. Huge.", movie: "Pretty Woman", year: 1990 },
+    { quote: "As if!", movie: "Clueless", year: 1995 },
+    { quote: "What, like it's hard?", movie: "Legally Blonde", year: 2001 },
+    { quote: "Tell me about it, stud.", movie: "Grease", year: 1978 },
+    { quote: "As you wish.", movie: "The Princess Bride", year: 1987 },
+    { quote: "It's just a flesh wound.", movie: "Monty Python and the Holy Grail", year: 1975 },
+    { quote: "Ogres have layers.", movie: "Shrek", year: 2001 },
+    { quote: "Light bulb!", movie: "Despicable Me", year: 2010 },
+    { quote: "No capes!", movie: "The Incredibles", year: 2004 },
+    { quote: "Stay classy, San Diego.", movie: "Anchorman: The Legend of Ron Burgundy", year: 2004 },
+    { quote: "Blue Steel.", movie: "Zoolander", year: 2001 },
+    { quote: "Shake and bake!", movie: "Talladega Nights: The Ballad of Ricky Bobby", year: 2006 }
+];
+
+function renderRandomQuote() {
+    const el = document.getElementById("tagline");
+    if (!el) return;
+
+    const pick = FILM_QUOTES[Math.floor(Math.random() * FILM_QUOTES.length)];
+    el.textContent = `"${pick.quote}" - ${pick.movie}, ${pick.year}`;
 }
 
 // ======================================
@@ -158,16 +255,21 @@ function refreshDrawButton() {
 
 async function drawChooser() {
     const month = currentMonthStr();
-    const previousMonth = addMonths(month, -1);
 
-    const previousSnap = await getDoc(doc(db, "filmClubPicks", previousMonth));
-    const previousChooser = previousSnap.exists() ? previousSnap.data().chooser : null;
+    let chosen = FORCED_CHOOSERS[month];
 
-    const eligible = members.length > 1 && previousChooser
-        ? members.filter(name => name !== previousChooser)
-        : members;
+    if (!chosen) {
+        const previousMonth = addMonths(month, -1);
 
-    const chosen = eligible[Math.floor(Math.random() * eligible.length)];
+        const previousSnap = await getDoc(doc(db, "filmClubPicks", previousMonth));
+        const previousChooser = previousSnap.exists() ? previousSnap.data().chooser : null;
+
+        const eligible = members.length > 1 && previousChooser
+            ? members.filter(name => name !== previousChooser)
+            : members;
+
+        chosen = eligible[Math.floor(Math.random() * eligible.length)];
+    }
 
     // A transaction stops two friends who click "draw" at the same moment
     // from each locking in a different chooser for the month.
@@ -194,6 +296,11 @@ function listenForCurrentPick() {
 
     onSnapshot(doc(db, "filmClubPicks", month), snap => {
         currentPick = snap.exists() ? snap.data() : null;
+
+        if (!currentPick) {
+            maybeCarryOverPick(month);
+        }
+
         renderCurrentPick();
         refreshDrawButton();
 
@@ -201,6 +308,32 @@ function listenForCurrentPick() {
             listenForRatings(month);
         }
     });
+}
+
+// If this month is set up to reuse another month's pick, and that source
+// month already has a film chosen, copy it straight in - no new draw or
+// search needed. Harmless if it runs more than once (same data every time).
+async function maybeCarryOverPick(month) {
+    const sourceMonth = CARRY_OVER_PICKS[month];
+    if (!sourceMonth) return;
+
+    const sourceSnap = await getDoc(doc(db, "filmClubPicks", sourceMonth));
+    if (!sourceSnap.exists() || !sourceSnap.data().title) return;
+
+    const source = sourceSnap.data();
+
+    await setDoc(doc(db, "filmClubPicks", month), {
+        month,
+        chooser: source.chooser,
+        imdbID: source.imdbID,
+        title: source.title,
+        year: source.year,
+        poster: source.poster,
+        plot: source.plot,
+        carriedOverFrom: sourceMonth,
+        chosenAt: serverTimestamp(),
+        filmSelectedAt: serverTimestamp()
+    }, { merge: true });
 }
 
 function renderCurrentPick() {
@@ -502,6 +635,7 @@ function initTabs() {
 // ======================================
 
 function start() {
+    renderRandomQuote();
     initTabs();
     initMemberForm();
     initFilmSearch();
