@@ -1,1 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Film Club 🎬</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="filmclubstyle.css">
+
+    <!-- Firebase (shared with MapTap League) -->
+    <script type="module" src="firebase.js"></script>
+
+    <script type="module" src="filmclub.js"></script>
+</head>
+<body>
+
+<div class="reel-border"></div>
+
+<header>
+    <p class="marquee-eyebrow">✦ The ✦</p>
+    <h1>FILM CLUB</h1>
+    <p class="tagline">One film a month, chosen by chance, watched together</p>
+</header>
+
+<nav class="tabs">
+    <button class="tab-btn active" data-tab="current">🎬 This Month</button>
+    <button class="tab-btn" data-tab="history">📽️ Past Films</button>
+</nav>
+
+<main>
+
+    <!-- ===================== THIS MONTH ===================== -->
+    <section id="tab-current" class="tab-panel active">
+
+        <div class="card chooser-card">
+            <h2>This Month&rsquo;s Chooser</h2>
+            <div id="chooser-display" class="chooser-display">Loading the club roster...</div>
+            <button id="draw-chooser-btn" class="btn-gold hidden">🎲 Draw This Month&rsquo;s Chooser</button>
+        </div>
+
+        <div class="card search-card hidden" id="search-card">
+            <h2>Pick This Month&rsquo;s Film</h2>
+            <p class="card-hint">Search for a title, then confirm your pick below.</p>
+
+            <div class="search-row">
+                <input id="film-search-input" type="text" placeholder="Search for a film title&hellip;" autocomplete="off">
+                <button id="film-search-btn" class="btn-gold">🔍 Search</button>
+            </div>
+
+            <div id="search-results" class="search-results"></div>
+
+            <div id="search-preview" class="film-preview hidden">
+                <div class="film-poster-wrap">
+                    <img id="preview-poster" src="" alt="">
+                </div>
+                <div class="film-preview-details">
+                    <h3 id="preview-title"></h3>
+                    <p id="preview-meta" class="film-meta"></p>
+                    <p id="preview-plot" class="film-plot"></p>
+                    <div class="preview-actions">
+                        <button id="confirm-film-btn" class="btn-gold">✅ Confirm &amp; Announce</button>
+                        <button id="cancel-preview-btn" class="btn-ghost">✕ Choose Another</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card film-card hidden" id="film-card">
+            <div class="marquee-tag">Now Showing</div>
+            <div class="film-poster-wrap">
+                <img id="film-poster" src="" alt="">
+            </div>
+            <div class="film-card-details">
+                <h2 id="film-title"></h2>
+                <p id="film-meta" class="film-meta"></p>
+                <p id="film-plot" class="film-plot"></p>
+                <p class="chosen-by">Chosen by <span id="film-chooser"></span></p>
+            </div>
+        </div>
+
+        <div class="card rating-card hidden" id="rating-card">
+            <h2>Rate This Month&rsquo;s Film</h2>
+            <p class="card-hint">Cast your vote anonymously &mdash; 1 to 10 stars. No names attached.</p>
+
+            <div id="star-input" class="star-input"></div>
+
+            <button id="submit-rating-btn" class="btn-gold">🌟 Submit Rating</button>
+            <p id="rating-message" class="rating-message"></p>
+
+            <div class="rating-summary">
+                <span id="rating-average">&ndash;</span> average from <span id="rating-count">0</span> vote(s)
+            </div>
+        </div>
+
+        <div class="card members-card">
+            <h2>Club Members</h2>
+            <p class="card-hint">Whoever's in the club gets thrown in the monthly draw.</p>
+            <ul id="members-list" class="members-list"></ul>
+            <div class="add-member-row">
+                <input id="new-member-input" type="text" placeholder="Add a friend&rsquo;s name" autocomplete="off">
+                <button id="add-member-btn" class="btn-gold">➕ Add</button>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ===================== PAST FILMS ===================== -->
+    <section id="tab-history" class="tab-panel">
+        <div class="card">
+            <h2>Past Films</h2>
+            <div id="history-list" class="history-list">Rewinding the reel&hellip;</div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>🎞️ Film Club &copy; 2026</p>
+</footer>
+
+</body>
+</html>
 
