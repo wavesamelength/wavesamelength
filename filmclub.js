@@ -25,7 +25,7 @@ import {
 //   https://www.omdbapi.com/apikey.aspx
 // then paste it in below.
 
-const OMDB_API_KEY = "YOUR_OMDB_API_KEY_HERE";
+const OMDB_API_KEY = "8e950e92";
 
 // ======================================
 // STATE
