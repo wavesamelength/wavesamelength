@@ -1,0 +1,650 @@
+/* =========================
+   FILM CLUB STYLES
+   Old Hollywood theme
+   ========================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Cormorant+Garamond:wght@400;500;600&display=swap');
+
+:root {
+    --gold: #d4af37;
+    --gold-bright: #f3d573;
+    --gold-dim: #8a712c;
+    --cream: #f3e9d2;
+    --charcoal: #0e0d0c;
+    --charcoal-2: #1a1715;
+    --maroon: #3a1418;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 19px;
+    background:
+        radial-gradient(ellipse at top, #262220 0%, var(--charcoal) 60%),
+        var(--charcoal);
+    color: var(--cream);
+    min-height: 100vh;
+}
+
+h1, h2, h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* FILM STRIP BORDER (top of page) */
+
+.reel-border {
+    height: 22px;
+    width: 100%;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            var(--charcoal) 0px,
+            var(--charcoal) 14px,
+            transparent 14px,
+            transparent 28px
+        );
+    background-color: #000;
+    position: relative;
+}
+
+.reel-border::before,
+.reel-border::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            transparent 6px,
+            var(--charcoal-2) 6px,
+            var(--charcoal-2) 22px
+        );
+    opacity: 0;
+}
+
+/* HEADER */
+
+header {
+    text-align: center;
+    padding: 36px 20px 24px;
+    border-bottom: 2px solid var(--gold-dim);
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.08), transparent);
+}
+
+.marquee-eyebrow {
+    margin: 0;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-size: 14px;
+}
+
+header h1 {
+    margin: 6px 0;
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: 6px;
+    color: var(--gold-bright);
+    text-shadow:
+        0 0 6px rgba(243, 213, 115, 0.35),
+        0 2px 0 #000;
+}
+
+.tagline {
+    margin: 0;
+    color: #c9bfa8;
+    font-style: italic;
+    font-size: 17px;
+}
+
+/* TABS */
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 28px auto 0;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    font-family: 'Playfair Display', Georgia, serif;
+    background: var(--charcoal-2);
+    color: #cbbf9e;
+    border: 1px solid var(--gold-dim);
+    padding: 10px 22px;
+    border-radius: 999px 999px 4px 4px;
+    cursor: pointer;
+    font-size: 16px;
+    letter-spacing: 1px;
+    transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.tab-btn:hover {
+    transform: translateY(-2px);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+    color: #241d0c;
+    border-color: var(--gold);
+    font-weight: 700;
+}
+
+/* MAIN */
+
+main {
+    width: 94%;
+    max-width: 820px;
+    margin: auto;
+    padding: 28px 0 40px;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* CARDS */
+
+.card {
+    background: linear-gradient(160deg, rgba(212, 175, 55, 0.06), rgba(255, 255, 255, 0.02));
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    padding: 26px 28px;
+    margin-bottom: 24px;
+    position: relative;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    animation: fade-in 0.4s ease both;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+.card h2 {
+    margin-top: 0;
+    font-size: 26px;
+    color: var(--gold-bright);
+    letter-spacing: 1px;
+}
+
+.card-hint {
+    color: #b7ab8c;
+    font-size: 16px;
+    margin-top: -8px;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* CHOOSER */
+
+.chooser-display {
+    font-size: 22px;
+    text-align: center;
+    padding: 18px 0;
+    color: var(--cream);
+}
+
+.chooser-name {
+    color: var(--gold-bright);
+    font-weight: 700;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 30px;
+    display: block;
+    margin-top: 6px;
+}
+
+/* BUTTONS */
+
+.btn-gold {
+    display: inline-block;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 4px;
+    margin-top: 10px;
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold-dim));
+    color: #241d0c;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-gold:hover:not(:disabled) {
+    transform: scale(1.02);
+    box-shadow: 0 0 18px rgba(243, 213, 115, 0.35);
+}
+
+.btn-gold:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-ghost {
+    display: inline-block;
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: transparent;
+    color: #cbbf9e;
+    border: 1px solid var(--gold-dim);
+    border-radius: 4px;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* SEARCH */
+
+.search-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.search-row input {
+    flex: 1;
+}
+
+input[type="text"] {
+    padding: 12px 14px;
+    border-radius: 4px;
+    border: 1px solid var(--gold-dim);
+    background: #1c1815;
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 17px;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--gold-bright);
+}
+
+.search-row .btn-gold {
+    width: auto;
+    padding: 0 22px;
+    margin-top: 0;
+}
+
+.search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.search-empty {
+    color: #b7ab8c;
+    font-style: italic;
+}
+
+.result-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 12px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.result-row:hover {
+    background: rgba(212, 175, 55, 0.08);
+    border-color: var(--gold-dim);
+}
+
+.result-poster {
+    width: 40px;
+    height: 58px;
+    object-fit: cover;
+    border-radius: 2px;
+    background: #2a2521;
+    flex-shrink: 0;
+}
+
+.result-info {
+    flex: 1;
+}
+
+.result-title {
+    font-weight: 600;
+    color: var(--cream);
+}
+
+.result-year {
+    color: #a89a76;
+    font-size: 15px;
+}
+
+/* FILM PREVIEW / NOW SHOWING CARD */
+
+.film-preview {
+    margin-top: 20px;
+    display: flex;
+    gap: 22px;
+    border-top: 1px dashed var(--gold-dim);
+    padding-top: 20px;
+}
+
+.film-card {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(160deg, rgba(58, 20, 24, 0.5), rgba(0, 0, 0, 0.2));
+}
+
+.film-card .film-poster-wrap,
+.film-card .film-card-details {
+    display: flex;
+}
+
+.film-card {
+    flex-direction: column;
+}
+
+.marquee-tag {
+    align-self: center;
+    background: var(--maroon);
+    color: var(--gold-bright);
+    border: 1px solid var(--gold);
+    padding: 4px 18px;
+    border-radius: 999px;
+    font-family: 'Playfair Display', Georgia, serif;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+.film-poster-wrap img {
+    width: 130px;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 3px solid var(--gold-dim);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+    background: #2a2521;
+    flex-shrink: 0;
+}
+
+.film-card .film-poster-wrap img {
+    width: 160px;
+    height: 230px;
+    margin-bottom: 16px;
+}
+
+.film-preview-details {
+    flex: 1;
+}
+
+.film-card-details h2,
+.film-preview-details h3 {
+    margin: 0 0 4px;
+    color: var(--gold-bright);
+    font-size: 26px;
+}
+
+.film-meta {
+    color: #a89a76;
+    font-size: 16px;
+    margin: 0 0 12px;
+    letter-spacing: 0.5px;
+}
+
+.film-plot {
+    color: var(--cream);
+    line-height: 1.5;
+    font-size: 18px;
+}
+
+.chosen-by {
+    margin-top: 14px;
+    color: #cbbf9e;
+    font-style: italic;
+}
+
+.chosen-by span {
+    color: var(--gold-bright);
+    font-weight: 600;
+}
+
+.preview-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+/* STAR RATING */
+
+.star-input {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    font-size: 34px;
+    margin: 12px 0 6px;
+    flex-wrap: wrap;
+}
+
+.star-input .star {
+    cursor: pointer;
+    color: #4a4238;
+    transition: color 0.1s ease, transform 0.1s ease;
+    user-select: none;
+}
+
+.star-input .star.filled {
+    color: var(--gold-bright);
+    text-shadow: 0 0 8px rgba(243, 213, 115, 0.4);
+}
+
+.star-input .star:hover {
+    transform: scale(1.15);
+}
+
+.rating-message {
+    text-align: center;
+    min-height: 20px;
+    color: var(--gold-bright);
+    font-size: 16px;
+}
+
+.rating-summary {
+    text-align: center;
+    color: #cbbf9e;
+    font-size: 18px;
+    border-top: 1px dashed var(--gold-dim);
+    padding-top: 14px;
+    margin-top: 6px;
+}
+
+.rating-summary span {
+    color: var(--gold-bright);
+    font-weight: 700;
+    font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* MEMBERS */
+
+.members-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.members-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 4px;
+}
+
+.remove-member-btn {
+    background: none;
+    border: none;
+    color: #a86a6a;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.remove-member-btn:hover {
+    color: #e08a8a;
+}
+
+.add-member-row {
+    display: flex;
+    gap: 10px;
+}
+
+.add-member-row input {
+    flex: 1;
+}
+
+.add-member-row .btn-gold {
+    width: auto;
+    padding: 0 20px;
+    margin-top: 0;
+}
+
+/* HISTORY */
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.history-empty {
+    color: #b7ab8c;
+    font-style: italic;
+}
+
+.history-card {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 4px;
+    align-items: flex-start;
+}
+
+.history-poster {
+    width: 70px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 3px;
+    border: 2px solid var(--gold-dim);
+    background: #2a2521;
+    flex-shrink: 0;
+}
+
+.history-info {
+    flex: 1;
+}
+
+.history-month {
+    color: var(--gold);
+    letter-spacing: 1px;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.history-title {
+    margin: 2px 0 6px;
+    font-size: 22px;
+    color: var(--cream);
+    font-family: 'Playfair Display', Georgia, serif;
+}
+
+.history-chooser {
+    color: #cbbf9e;
+    font-style: italic;
+    margin: 0 0 6px;
+}
+
+.history-rating {
+    color: var(--gold-bright);
+    font-weight: 600;
+}
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    color: #6b6255;
+    padding: 24px;
+    font-style: italic;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 38px;
+        letter-spacing: 3px;
+    }
+
+    .card {
+        padding: 20px 18px;
+    }
+
+    .film-preview {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .preview-actions {
+        flex-direction: column;
+    }
+
+    .history-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .star-input {
+        font-size: 28px;
+    }
+}
