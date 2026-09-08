@@ -271,6 +271,63 @@ button:disabled {
     transform: none;
 }
 
+/* SECONDARY / FORCE-FINALIZE BUTTONS */
+
+.secondary-button {
+    background: rgba(255, 255, 255, 0.08);
+    color: #e5e7eb;
+}
+
+#force-finalize-btn {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+/* MODAL */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal {
+    background: #1f2937;
+    border-radius: 18px;
+    padding: 25px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.modal h3 {
+    margin-top: 0;
+}
+
+.modal p {
+    color: #d1d5db;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.modal-actions button {
+    flex: 1;
+    margin-top: 0;
+}
+
 /* TODAY'S ENTRIES */
 
 #today-entries {
