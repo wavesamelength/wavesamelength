@@ -428,7 +428,13 @@ function computeWeekStandings(weekStart) {
 
     return players
         .map(player => ({ player, points: totals[player], played: played[player] }))
-        .sort((a, b) => b.points - a.points || a.player.localeCompare(b.player));
+        .sort((a, b) => {
+            if (b.points !== a.points) return b.points - a.points;
+            const avgA = a.played > 0 ? a.points / a.played : 0;
+            const avgB = b.played > 0 ? b.points / b.played : 0;
+            if (avgB !== avgA) return avgB - avgA;
+            return a.player.localeCompare(b.player);
+        });
 }
 
 function daysFinalizedSoFar(weekStart) {
