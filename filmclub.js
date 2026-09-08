@@ -2,7 +2,7 @@
 // FILM CLUB APPLICATION LOGIC
 // ======================================
 
-import { db } from '../_maptap/firebase.js';
+import { db } from './firebase.js';
 import {
     collection,
     doc,
