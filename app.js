@@ -27,6 +27,7 @@ let players = [];          // all league players, alphabetical
 let results = [];          // every score doc ever submitted: { date, player, score }
 let selectedPlayer = "";   // whoever is currently chosen in the dropdown
 let legacyWins = {};       // baseline weekly-win counts from before this site existed
+let forcedDays = new Set(); // dates manually locked in early via "Everyone's Done"
 
 // ======================================
 // DATE / WEEK HELPERS
@@ -72,9 +73,10 @@ function addDays(dateStr, amount) {
 }
 
 // A day only counts towards the league once it's "done" - either the
-// calendar date has passed, or everyone has already entered their score.
+// calendar date has passed, everyone has already entered their score,
+// or it was manually locked in early via the "Everyone's Done" button.
 function isDayFinalized(dateStr, entryCount) {
-    return dateStr < todayStr() || entryCount >= players.length;
+    return dateStr < todayStr() || entryCount >= players.length || forcedDays.has(dateStr);
 }
 
 function updateWeekTitle() {
@@ -312,6 +314,13 @@ function listenForResults() {
     });
 }
 
+function listenForForcedDays() {
+    onSnapshot(collection(db, "forcedDays"), snapshot => {
+        forcedDays = new Set(snapshot.docs.map(d => d.id));
+        renderAll();
+    });
+}
+
 function entriesForDate(dateStr) {
     return results.filter(r => r.date === dateStr);
 }
@@ -368,6 +377,52 @@ function renderTodayEntries() {
         `;
 
         container.appendChild(row);
+    });
+
+    const forceBtn = document.getElementById("force-finalize-btn");
+    if (forceBtn) {
+        forceBtn.classList.toggle("hidden", isDayFinalized(today, todayEntries.length));
+    }
+}
+
+// ======================================
+// FORCE FINALIZE TODAY
+// (lets someone lock in today's scores early, even if not everyone
+// has entered yet - e.g. so the league doesn't stall waiting on one person)
+// ======================================
+
+function initForceFinalizeButton() {
+    const button = document.getElementById("force-finalize-btn");
+    const modal = document.getElementById("force-finalize-modal");
+    const cancelBtn = document.getElementById("force-finalize-cancel");
+    const confirmBtn = document.getElementById("force-finalize-confirm");
+
+    if (!button || !modal || !cancelBtn || !confirmBtn) return;
+
+    button.addEventListener("click", () => modal.classList.remove("hidden"));
+    cancelBtn.addEventListener("click", () => modal.classList.add("hidden"));
+
+    modal.addEventListener("click", event => {
+        if (event.target === modal) modal.classList.add("hidden");
+    });
+
+    confirmBtn.addEventListener("click", async () => {
+        const originalLabel = confirmBtn.textContent;
+
+        confirmBtn.disabled = true;
+        cancelBtn.disabled = true;
+        confirmBtn.textContent = "Locking in...";
+
+        try {
+            await setDoc(doc(db, "forcedDays", todayStr()), {
+                forcedAt: serverTimestamp()
+            });
+            modal.classList.add("hidden");
+        } finally {
+            confirmBtn.disabled = false;
+            cancelBtn.disabled = false;
+            confirmBtn.textContent = originalLabel;
+        }
     });
 }
 
@@ -562,7 +617,9 @@ async function start() {
     updateWeekTitle();
     await Promise.all([loadPlayers(), loadLegacyWins()]);
     initEntryForm();
+    initForceFinalizeButton();
     listenForResults();
+    listenForForcedDays();
 }
 
 start();
