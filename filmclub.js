@@ -11,7 +11,6 @@ import {
     setDoc,
     deleteDoc,
     onSnapshot,
-    runTransaction,
     serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
@@ -25,13 +24,7 @@ import {
 //   https://www.omdbapi.com/apikey.aspx
 // then paste it in below.
 
-const OMDB_API_KEY = "8e950e92";
-
-// Pre-agreed chooser for a specific month, bypassing the random draw.
-// Add entries here as needed; every other month falls back to random.
-const FORCED_CHOOSERS = {
-    "2026-07": "Jack"
-};
+const OMDB_API_KEY = "YOUR_OMDB_API_KEY_HERE";
 
 // A month in here reuses another month's whole pick (chooser + film)
 // instead of drawing/searching again - e.g. July's film running into August.
@@ -61,12 +54,6 @@ function pad2(n) {
 
 function currentMonthStr() {
     const d = new Date();
-    return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}`;
-}
-
-function addMonths(monthStr, delta) {
-    const [y, m] = monthStr.split("-").map(Number);
-    const d = new Date(y, m - 1 + delta, 1);
     return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}`;
 }
 
@@ -149,9 +136,7 @@ const FILM_QUOTES = [
     { quote: "No capes!", movie: "The Incredibles", year: 2004 },
     { quote: "Stay classy, San Diego.", movie: "Anchorman: The Legend of Ron Burgundy", year: 2004 },
     { quote: "Blue Steel.", movie: "Zoolander", year: 2001 },
-    { quote: "Shake and bake!", movie: "Talladega Nights: The Ballad of Ricky Bobby", year: 2006 },
-    { quote: "it's morbin' time!", movie: "Morbius", year: 2022 },
-    { quote: "You better hold on tight, spider monkey.", movie: "Twilight", year: 2008 }
+    { quote: "Shake and bake!", movie: "Talladega Nights: The Ballad of Ricky Bobby", year: 2006 }
 ];
 
 function renderRandomQuote() {
@@ -191,7 +176,8 @@ function listenForMembers() {
     onSnapshot(collection(db, "filmClubMembers"), snapshot => {
         members = snapshot.docs.map(d => d.id).sort((a, b) => a.localeCompare(b));
         renderMembers();
-        refreshDrawButton();
+        populateChooserSelect();
+        refreshChooserSelect();
     });
 }
 
@@ -244,49 +230,46 @@ function initMemberForm() {
 }
 
 // ======================================
-// DRAW THIS MONTH'S CHOOSER
+// SET THIS MONTH'S CHOOSER
 // ======================================
+//
+// Who chooses is decided outside the app (an external wheel-spin site) -
+// this just records the result so the rest of the page can pick up from there.
 
-function refreshDrawButton() {
-    const btn = document.getElementById("draw-chooser-btn");
-    if (!btn) return;
+function populateChooserSelect() {
+    const select = document.getElementById("chooser-select");
+    if (!select) return;
 
-    const alreadyDrawn = !!(currentPick && currentPick.chooser);
-    btn.classList.toggle("hidden", alreadyDrawn || members.length === 0);
+    select.innerHTML = '<option value="" disabled selected>Who won the spin?</option>';
+
+    members.forEach(name => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        select.appendChild(option);
+    });
 }
 
-async function drawChooser() {
-    const month = currentMonthStr();
+function refreshChooserSelect() {
+    const row = document.getElementById("chooser-select-row");
+    if (!row) return;
 
-    let chosen = FORCED_CHOOSERS[month];
+    const alreadySet = !!(currentPick && currentPick.chooser);
+    row.classList.toggle("hidden", alreadySet || members.length === 0);
+}
 
-    if (!chosen) {
-        const previousMonth = addMonths(month, -1);
+async function setChooser() {
+    const select = document.getElementById("chooser-select");
+    const chosen = select.value;
+    if (!chosen) return;
 
-        const previousSnap = await getDoc(doc(db, "filmClubPicks", previousMonth));
-        const previousChooser = previousSnap.exists() ? previousSnap.data().chooser : null;
+    await setDoc(doc(db, "filmClubPicks", currentMonthStr()), {
+        month: currentMonthStr(),
+        chooser: chosen,
+        chosenAt: serverTimestamp()
+    }, { merge: true });
 
-        const eligible = members.length > 1 && previousChooser
-            ? members.filter(name => name !== previousChooser)
-            : members;
-
-        chosen = eligible[Math.floor(Math.random() * eligible.length)];
-    }
-
-    // A transaction stops two friends who click "draw" at the same moment
-    // from each locking in a different chooser for the month.
-    await runTransaction(db, async transaction => {
-        const ref = doc(db, "filmClubPicks", month);
-        const snap = await transaction.get(ref);
-
-        if (snap.exists() && snap.data().chooser) return;
-
-        transaction.set(ref, {
-            month,
-            chooser: chosen,
-            chosenAt: serverTimestamp()
-        }, { merge: true });
-    });
+    select.value = "";
 }
 
 // ======================================
@@ -304,7 +287,7 @@ function listenForCurrentPick() {
         }
 
         renderCurrentPick();
-        refreshDrawButton();
+        refreshChooserSelect();
 
         if (currentPick && currentPick.title) {
             listenForRatings(month);
@@ -346,8 +329,8 @@ function renderCurrentPick() {
 
     if (!currentPick || !currentPick.chooser) {
         chooserDisplay.innerHTML = members.length
-            ? "Nobody's been drawn for this month yet."
-            : "Add some club members below, then draw a chooser.";
+            ? "Nobody's been picked for this month yet &mdash; spin the wheel, then record the winner below."
+            : "Add some club members below, then spin the wheel to pick a chooser.";
         searchCard.classList.add("hidden");
         filmCard.classList.add("hidden");
         ratingCard.classList.add("hidden");
@@ -643,7 +626,7 @@ function start() {
     initFilmSearch();
     initStarInput();
 
-    document.getElementById("draw-chooser-btn").addEventListener("click", drawChooser);
+    document.getElementById("set-chooser-btn").addEventListener("click", setChooser);
 
     listenForMembers();
     listenForCurrentPick();
