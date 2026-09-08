@@ -55,6 +55,7 @@
     <section class="card">
         <h2>Today's Entries</h2>
         <div id="today-entries">Loading players...</div>
+        <button id="force-finalize-btn" class="secondary-button hidden">🔒 Everyone's Done</button>
     </section>
 
     <section class="card">
@@ -87,6 +88,17 @@
     </section>
 
 </main>
+
+<div id="force-finalize-modal" class="modal-overlay hidden">
+    <div class="modal">
+        <h3>Lock in today's scores?</h3>
+        <p>This will lock in the scores for today, even if everyone hasn't entered their score. Are you sure you want to do this?</p>
+        <div class="modal-actions">
+            <button id="force-finalize-cancel" class="secondary-button">Cancel</button>
+            <button id="force-finalize-confirm">Yes, lock it in</button>
+        </div>
+    </div>
+</div>
 
 <footer>
     <p>MapTap League © 2026</p>
