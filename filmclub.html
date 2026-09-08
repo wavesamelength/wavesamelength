@@ -37,7 +37,12 @@
         <div class="card chooser-card">
             <h2>This Month&rsquo;s Chooser</h2>
             <div id="chooser-display" class="chooser-display">Loading the club roster...</div>
-            <button id="draw-chooser-btn" class="btn-gold hidden">🎲 Draw This Month&rsquo;s Chooser</button>
+            <div id="chooser-select-row" class="chooser-select-row hidden">
+                <select id="chooser-select">
+                    <option value="" disabled selected>Who won the spin?</option>
+                </select>
+                <button id="set-chooser-btn" class="btn-gold">🎡 Record Winner</button>
+            </div>
         </div>
 
         <div class="card search-card hidden" id="search-card">
