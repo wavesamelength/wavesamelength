@@ -78,6 +78,22 @@
     </div>
 </div>
 
+<div id="player-stats-modal" class="modal-overlay hidden">
+    <div class="modal modal-wide">
+        <button type="button" id="player-stats-close" class="modal-close" aria-label="Close">✕</button>
+        <h3 id="player-stats-name">Player</h3>
+        <div class="stat-tabs" id="player-stats-tabs">
+            <button type="button" class="stat-tab" data-stat="weekAvg">Weekly Avg</button>
+            <button type="button" class="stat-tab" data-stat="allTimeAvg">All-Time Avg</button>
+            <button type="button" class="stat-tab" data-stat="wins">🏆 Wins</button>
+        </div>
+        <div class="chart-wrap">
+            <svg id="player-stats-chart" viewBox="0 0 640 320" preserveAspectRatio="xMidYMid meet"></svg>
+            <p id="player-stats-empty" class="chart-empty hidden">No data yet.</p>
+        </div>
+    </div>
+</div>
+
 <footer>
     <p>MapTap League © 2026</p>
 </footer>
