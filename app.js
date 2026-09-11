@@ -664,9 +664,20 @@ function renderHorseRace() {
     }
 
     const leadPoints = standings[0].points;
+    const trailPoints = standings[standings.length - 1].points;
+    const pointsRange = leadPoints - trailPoints;
+
+    // Scaling relative to the leader alone (points / leadPoints) squashes
+    // everyone into a narrow band whenever scores are close together -
+    // e.g. 7 vs 10 points is a real gap but only 70% vs 100% width. Instead
+    // we stretch the full track between the trailing and leading scores, so
+    // close races still look close but distinct.
+    const MIN_BAR_PCT = 15;
 
     standings.forEach(({ player, points, played }) => {
-        const pct = Math.round((points / leadPoints) * 100);
+        const pct = pointsRange === 0
+            ? 100
+            : Math.round(MIN_BAR_PCT + ((points - trailPoints) / pointsRange) * (100 - MIN_BAR_PCT));
 
         const row = document.createElement("div");
         row.className = "race-row";

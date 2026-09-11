@@ -2,7 +2,7 @@
    MAPTAP LEAGUE STYLES
    ========================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700;800&display=swap');
 
 * {
     box-sizing: border-box;
@@ -10,7 +10,7 @@
 
 body {
     margin: 0;
-    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-family: 'Rubik', Arial, Helvetica, sans-serif;
     background: linear-gradient(135deg, #111827, #1f2937);
     color: #f9fafb;
     min-height: 100vh;
@@ -25,9 +25,10 @@ header {
 
 header h1 {
     margin: 0;
-    font-size: 42px;
-    font-weight: 800;
-    letter-spacing: 2px;
+    font-family: 'Bungee', 'Rubik', sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: 1px;
 }
 
 .title-logo {
@@ -570,5 +571,24 @@ footer {
     .race-played {
         width: 56px;
         font-size: 11px;
+    }
+
+    .race-track,
+    .race-fill {
+        height: 22px;
+    }
+
+    .race-fill {
+        min-width: 36px;
+        padding-right: 6px;
+        gap: 3px;
+    }
+
+    .race-value {
+        font-size: 10px;
+    }
+
+    .race-horse {
+        font-size: 13px;
     }
 }
