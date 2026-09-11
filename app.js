@@ -23,6 +23,10 @@ const POINTS = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
 // MapTap final scores don't go above 1000 - anything higher means a mis-paste/typo.
 const MAX_SCORE = 1000;
 
+// All stats/graphs are scoped to results from this week onward (a Wednesday,
+// matching the league's Wed-Tue week boundary) - anything older is excluded.
+const STATS_START_DATE = "2026-07-29";
+
 let players = [];          // all league players, alphabetical
 let results = [];          // every score doc ever submitted: { date, player, score }
 let selectedPlayer = "";   // whoever is currently chosen in the dropdown
@@ -309,7 +313,7 @@ async function submitScore() {
 
 function listenForResults() {
     onSnapshot(collection(db, "results"), snapshot => {
-        results = snapshot.docs.map(d => d.data());
+        results = snapshot.docs.map(d => d.data()).filter(r => r.date >= STATS_START_DATE);
         renderAll();
     });
 }
