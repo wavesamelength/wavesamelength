@@ -329,7 +329,6 @@ function renderAll() {
     renderTodayEntries();
     renderStandings();
     renderHorseRace();
-    renderPreviousWinners();
 }
 
 // ======================================
@@ -713,37 +712,6 @@ function computeWinCounts() {
     });
 
     return winCounts;
-}
-
-function renderPreviousWinners() {
-    const historyDiv = document.getElementById("history");
-    if (!historyDiv) return;
-
-    const winCounts = computeWinCounts();
-
-    const tally = Object.entries(winCounts)
-        .filter(([, count]) => count > 0)
-        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-
-    historyDiv.innerHTML = "";
-
-    if (tally.length === 0) {
-        historyDiv.innerHTML = "No completed weeks yet 🗺️";
-        return;
-    }
-
-    tally.forEach(([player, count]) => {
-        const row = document.createElement("div");
-        row.className = "win-row";
-
-        row.innerHTML = `
-            ${avatarHtml(player)}
-            <span class="entry-name">${player}</span>
-            <span class="win-count">🏆 ${count} win${count === 1 ? "" : "s"}</span>
-        `;
-
-        historyDiv.appendChild(row);
-    });
 }
 
 // ======================================
