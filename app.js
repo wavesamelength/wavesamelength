@@ -336,6 +336,17 @@ function renderAll() {
 // TODAY'S ENTRIES
 // ======================================
 
+// Sortable columns for the player summary table. Not persisted anywhere on
+// purpose - a page refresh should always come back to the default sort.
+const TODAY_ENTRIES_COLUMNS = {
+    score: "Today",
+    weekAvg: "Week Avg",
+    allTimeAvg: "All-Time Avg",
+    wins: "🏆",
+};
+
+let todayEntriesSort = { key: "score", direction: "desc" };
+
 function renderTodayEntries() {
     const container = document.getElementById("today-entries");
     if (!container) return;
@@ -344,37 +355,61 @@ function renderTodayEntries() {
     const todayEntries = entriesForDate(today);
     const enteredPlayers = new Set(todayEntries.map(e => e.player));
 
+    const weekStart = getLeagueWeek();
+    const winCounts = computeWinCounts();
+
     // Rank whoever's entered so far (live, before the day is finalized).
-    const ranked = rankDay(todayEntries);
+    // The rank badge always reflects today's actual placement, regardless
+    // of which column the table is currently sorted by.
+    const ranked = rankDay(todayEntries).map(entry => ({
+        ...entry,
+        weekAvg: computeWeekAverage(entry.player, weekStart),
+        allTimeAvg: computeAllTimeAverage(entry.player),
+        wins: winCounts[entry.player] || 0,
+    }));
+    sortTodayEntries(ranked);
+
     const pending = players
         .filter(player => !enteredPlayers.has(player))
         .sort((a, b) => a.localeCompare(b));
 
     container.innerHTML = "";
+    container.appendChild(buildTodayEntriesHeader());
 
-    ranked.forEach(({ player, score, rank }) => {
+    const sortedCol = key => (todayEntriesSort.key === key ? " sort-active" : "");
+
+    ranked.forEach(({ player, score, weekAvg, allTimeAvg, wins }) => {
         const row = document.createElement("div");
         row.className = "entry-row";
 
         row.innerHTML = `
-            <span class="rank-badge">#${rank}</span>
-            ${avatarHtml(player)}
-            <span class="entry-name">${player}</span>
-            <span class="status-pill status-done">✅ ${score}</span>
+            <span class="entry-identity">
+                ${avatarHtml(player)}
+                <span class="entry-name">${player}</span>
+            </span>
+            <span class="stat-value stat-today status-done${sortedCol("score")}">${score}</span>
+            <span class="stat-value${sortedCol("weekAvg")}">${formatAverage(weekAvg)}</span>
+            <span class="stat-value${sortedCol("allTimeAvg")}">${formatAverage(allTimeAvg)}</span>
+            <span class="stat-value ${wins > 0 ? "stat-wins" : "stat-wins-zero"}${sortedCol("wins")}">${wins}</span>
         `;
 
         container.appendChild(row);
     });
 
     pending.forEach(player => {
+        const wins = winCounts[player] || 0;
         const row = document.createElement("div");
         row.className = "entry-row";
 
         row.innerHTML = `
-            <span class="rank-badge rank-badge-empty"></span>
-            ${avatarHtml(player)}
-            <span class="entry-name">${player}</span>
-            <span class="status-pill status-pending">⏳ Pending</span>
+            <span class="entry-identity">
+                ${avatarHtml(player)}
+                <span class="entry-name">${player}</span>
+            </span>
+            <span class="stat-value stat-today status-pending${sortedCol("score")}" title="Pending">⏳</span>
+            <span class="stat-value${sortedCol("weekAvg")}">${formatAverage(computeWeekAverage(player, weekStart))}</span>
+            <span class="stat-value${sortedCol("allTimeAvg")}">${formatAverage(computeAllTimeAverage(player))}</span>
+            <span class="stat-value ${wins > 0 ? "stat-wins" : "stat-wins-zero"}${sortedCol("wins")}">${wins}</span>
         `;
 
         container.appendChild(row);
@@ -384,6 +419,73 @@ function renderTodayEntries() {
     if (forceBtn) {
         forceBtn.classList.toggle("hidden", isDayFinalized(today, todayEntries.length));
     }
+}
+
+function buildTodayEntriesHeader() {
+    const header = document.createElement("div");
+    header.className = "entry-row entry-header";
+
+    header.appendChild(document.createElement("span")).className = "entry-identity";
+
+    Object.entries(TODAY_ENTRIES_COLUMNS).forEach(([key, label]) => {
+        const isActive = todayEntriesSort.key === key;
+        const arrow = isActive ? (todayEntriesSort.direction === "desc" ? "▼" : "▲") : "";
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `stat-label sort-label${isActive ? " sort-active" : ""}`;
+        button.innerHTML = `${label}${arrow ? ` <span class="sort-arrow">${arrow}</span>` : ""}`;
+        button.addEventListener("click", () => {
+            if (todayEntriesSort.key === key) {
+                todayEntriesSort.direction = todayEntriesSort.direction === "desc" ? "asc" : "desc";
+            } else {
+                todayEntriesSort = { key, direction: "desc" };
+            }
+            renderTodayEntries();
+        });
+
+        header.appendChild(button);
+    });
+
+    return header;
+}
+
+// Sorts today's ranked (already-entered) rows in place. Missing stats
+// (nobody has played enough games yet) always sink to the bottom rather
+// than flip-flopping with the sort direction.
+function sortTodayEntries(ranked) {
+    const { key, direction } = todayEntriesSort;
+    const multiplier = direction === "desc" ? -1 : 1;
+
+    ranked.sort((a, b) => {
+        const aValue = a[key];
+        const bValue = b[key];
+        if (aValue === null && bValue === null) return 0;
+        if (aValue === null) return 1;
+        if (bValue === null) return -1;
+        return (aValue - bValue) * multiplier;
+    });
+}
+
+// Player's average score across whichever of their own days fall within
+// the given week (Wed-Tue) - includes today's just-submitted score, if any.
+function computeWeekAverage(player, weekStart) {
+    const scores = [];
+    for (let offset = 0; offset < 7; offset++) {
+        const date = addDays(weekStart, offset);
+        const entry = entriesForDate(date).find(e => e.player === player);
+        if (entry) scores.push(entry.score);
+    }
+    return scores.length ? scores.reduce((sum, s) => sum + s, 0) / scores.length : null;
+}
+
+function computeAllTimeAverage(player) {
+    const scores = results.filter(r => r.player === player).map(r => r.score);
+    return scores.length ? scores.reduce((sum, s) => sum + s, 0) / scores.length : null;
+}
+
+function formatAverage(average) {
+    return average === null ? "–" : Math.round(average);
 }
 
 // ======================================
@@ -589,10 +691,10 @@ function renderHorseRace() {
 // PREVIOUS WINNERS
 // ======================================
 
-function renderPreviousWinners() {
-    const historyDiv = document.getElementById("history");
-    if (!historyDiv) return;
-
+// Tallies weekly wins per player: legacy baseline + one per completed week
+// where someone actually scored (ties for #1 are excluded further down by
+// computeWeekStandings, which always returns a single sorted leader).
+function computeWinCounts() {
     const currentWeek = getLeagueWeek();
 
     const pastWeeks = new Set(
@@ -609,6 +711,15 @@ function renderPreviousWinners() {
 
         winCounts[winner.player] = (winCounts[winner.player] || 0) + 1;
     });
+
+    return winCounts;
+}
+
+function renderPreviousWinners() {
+    const historyDiv = document.getElementById("history");
+    if (!historyDiv) return;
+
+    const winCounts = computeWinCounts();
 
     const tally = Object.entries(winCounts)
         .filter(([, count]) => count > 0)
