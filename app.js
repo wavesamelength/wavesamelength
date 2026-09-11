@@ -328,6 +328,7 @@ function entriesForDate(dateStr) {
 function renderAll() {
     renderTodayEntries();
     renderStandings();
+    renderHorseRace();
     renderPreviousWinners();
 }
 
@@ -557,6 +558,48 @@ function checkWinner(weekStart, standings) {
     card.classList.remove("hidden");
     document.getElementById("winner-name").innerHTML = `${avatarHtml(winner.player)} ${winner.player}`;
     document.getElementById("winner-score").innerText = `${winner.points} points`;
+}
+
+// ======================================
+// WEEKLY RACE
+// (horse-race style view of this week's standings - each player's bar
+// runs to their share of the current leader's points)
+// ======================================
+
+function renderHorseRace() {
+    const container = document.getElementById("horse-race");
+    if (!container) return;
+
+    const weekStart = getLeagueWeek();
+    const standings = computeWeekStandings(weekStart);
+
+    container.innerHTML = "";
+
+    if (!standings.length || standings[0].points === 0) {
+        container.innerHTML = "No scores yet this week 🐎";
+        return;
+    }
+
+    const leadPoints = standings[0].points;
+
+    standings.forEach(({ player, points }) => {
+        const pct = Math.round((points / leadPoints) * 100);
+
+        const row = document.createElement("div");
+        row.className = "race-row";
+
+        row.innerHTML = `
+            <span class="race-label">${avatarHtml(player)} ${player}</span>
+            <div class="race-track">
+                <div class="race-fill" style="width:${pct}%; background:${avatarColour(player)}">
+                    <span class="race-value">${points} pt${points === 1 ? "" : "s"}</span>
+                    <span class="race-horse">🏇</span>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(row);
+    });
 }
 
 // ======================================
