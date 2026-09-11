@@ -480,6 +480,8 @@ button:disabled {
 .race-horse {
     font-size: 18px;
     line-height: 1;
+    display: inline-block;
+    transform: scaleX(-1);
 }
 
 .race-played {

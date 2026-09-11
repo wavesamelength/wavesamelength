@@ -676,7 +676,7 @@ function renderHorseRace() {
             <div class="race-track">
                 <div class="race-fill" style="width:${pct}%; background:${avatarColour(player)}">
                     <span class="race-value">${points} pt${points === 1 ? "" : "s"}</span>
-                    <span class="race-horse">🏇</span>
+                    <span class="race-horse">🐎</span>
                 </div>
             </div>
             <span class="race-played">${played}/${totalGames} game${totalGames === 1 ? "" : "s"}</span>
