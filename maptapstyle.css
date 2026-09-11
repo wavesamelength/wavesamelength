@@ -485,6 +485,14 @@ button:disabled {
     white-space: nowrap;
 }
 
+.race-value-outside {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 8px;
+    color: #f9fafb;
+}
+
 .race-horse {
     font-size: 18px;
     line-height: 1;

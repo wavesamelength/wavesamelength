@@ -674,10 +674,17 @@ function renderHorseRace() {
     // close races still look close but distinct.
     const MIN_BAR_PCT = 15;
 
+    // Below this width, "X pts" no longer comfortably fits alongside the
+    // horse inside the coloured bar (worst on mobile, where the track
+    // itself is narrower) - so it moves outside the bar instead.
+    const NARROW_BAR_PCT = 40;
+
     standings.forEach(({ player, points, played }) => {
         const pct = pointsRange === 0
             ? 100
             : Math.round(MIN_BAR_PCT + ((points - trailPoints) / pointsRange) * (100 - MIN_BAR_PCT));
+        const isNarrow = pct < NARROW_BAR_PCT;
+        const valueLabel = `${points} pt${points === 1 ? "" : "s"}`;
 
         const row = document.createElement("div");
         row.className = "race-row";
@@ -686,9 +693,10 @@ function renderHorseRace() {
             <span class="race-label">${avatarHtml(player)} ${player}</span>
             <div class="race-track">
                 <div class="race-fill" style="width:${pct}%; background:${avatarColour(player)}">
-                    <span class="race-value">${points} pt${points === 1 ? "" : "s"}</span>
+                    ${isNarrow ? "" : `<span class="race-value">${valueLabel}</span>`}
                     <span class="race-horse">🐎</span>
                 </div>
+                ${isNarrow ? `<span class="race-value race-value-outside" style="left:${pct}%">${valueLabel}</span>` : ""}
             </div>
             <span class="race-played">${played}/${totalGames} game${totalGames === 1 ? "" : "s"}</span>
         `;
