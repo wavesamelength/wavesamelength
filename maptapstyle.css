@@ -146,11 +146,6 @@ td:nth-child(2) {
     gap: 10px;
 }
 
-.played-cell {
-    color: #9ca3af;
-    font-size: 14px;
-}
-
 tbody tr {
     transition: transform 0.2s ease;
 }
@@ -447,6 +442,15 @@ button:disabled {
     line-height: 1;
 }
 
+.race-played {
+    width: 74px;
+    flex-shrink: 0;
+    text-align: right;
+    font-size: 12px;
+    color: #9ca3af;
+    white-space: nowrap;
+}
+
 /* HISTORY */
 
 #history {
@@ -506,5 +510,10 @@ footer {
     .race-label {
         width: 80px;
         font-size: 13px;
+    }
+
+    .race-played {
+        width: 56px;
+        font-size: 11px;
     }
 }

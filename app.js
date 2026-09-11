@@ -510,27 +510,8 @@ function daysFinalizedSoFar(weekStart) {
 // ======================================
 
 function renderStandings() {
-    const table = document.getElementById("leaderboard");
-    if (!table) return;
-
     const weekStart = getLeagueWeek();
     const standings = computeWeekStandings(weekStart);
-    const totalDays = daysFinalizedSoFar(weekStart);
-
-    table.innerHTML = "";
-
-    standings.forEach((row, index) => {
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${avatarHtml(row.player)} ${row.player}</td>
-            <td>${row.points}</td>
-            <td class="played-cell">${row.played}/${totalDays}</td>
-        `;
-
-        table.appendChild(tr);
-    });
 
     checkWinner(weekStart, standings);
 }
@@ -572,6 +553,7 @@ function renderHorseRace() {
 
     const weekStart = getLeagueWeek();
     const standings = computeWeekStandings(weekStart);
+    const totalGames = daysFinalizedSoFar(weekStart);
 
     container.innerHTML = "";
 
@@ -582,7 +564,7 @@ function renderHorseRace() {
 
     const leadPoints = standings[0].points;
 
-    standings.forEach(({ player, points }) => {
+    standings.forEach(({ player, points, played }) => {
         const pct = Math.round((points / leadPoints) * 100);
 
         const row = document.createElement("div");
@@ -596,6 +578,7 @@ function renderHorseRace() {
                     <span class="race-horse">🏇</span>
                 </div>
             </div>
+            <span class="race-played">${played}/${totalGames} game${totalGames === 1 ? "" : "s"}</span>
         `;
 
         container.appendChild(row);
