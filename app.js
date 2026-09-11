@@ -336,6 +336,17 @@ function renderAll() {
 // TODAY'S ENTRIES
 // ======================================
 
+// Sortable columns for the player summary table. Not persisted anywhere on
+// purpose - a page refresh should always come back to the default sort.
+const TODAY_ENTRIES_COLUMNS = {
+    score: "Today",
+    weekAvg: "Week Avg",
+    allTimeAvg: "All-Time Avg",
+    wins: "🏆",
+};
+
+let todayEntriesSort = { key: "score", direction: "desc" };
+
 function renderTodayEntries() {
     const container = document.getElementById("today-entries");
     if (!container) return;
@@ -348,62 +359,57 @@ function renderTodayEntries() {
     const winCounts = computeWinCounts();
 
     // Rank whoever's entered so far (live, before the day is finalized).
-    const ranked = rankDay(todayEntries);
+    // The rank badge always reflects today's actual placement, regardless
+    // of which column the table is currently sorted by.
+    const ranked = rankDay(todayEntries).map(entry => ({
+        ...entry,
+        weekAvg: computeWeekAverage(entry.player, weekStart),
+        allTimeAvg: computeAllTimeAverage(entry.player),
+        wins: winCounts[entry.player] || 0,
+    }));
+    sortTodayEntries(ranked);
+
     const pending = players
         .filter(player => !enteredPlayers.has(player))
         .sort((a, b) => a.localeCompare(b));
 
     container.innerHTML = "";
+    container.appendChild(buildTodayEntriesHeader());
 
-    const header = document.createElement("div");
-    header.className = "entry-row entry-header";
-    header.innerHTML = `
-        <span class="entry-identity"></span>
-        <span class="stat-label">Today</span>
-        <span class="stat-label">Week Avg</span>
-        <span class="stat-label">All-Time Avg</span>
-        <span class="stat-label">🏆</span>
-    `;
-    container.appendChild(header);
+    const sortedCol = key => (todayEntriesSort.key === key ? " sort-active" : "");
 
-    const buildStatsHtml = player => {
-        const wins = winCounts[player] || 0;
-        return `
-        <span class="stat-value">${formatAverage(computeWeekAverage(player, weekStart))}</span>
-        <span class="stat-value">${formatAverage(computeAllTimeAverage(player))}</span>
-        <span class="stat-value ${wins > 0 ? "stat-wins" : "stat-wins-zero"}">${wins}</span>
-    `;
-    };
-
-    ranked.forEach(({ player, score, rank }) => {
+    ranked.forEach(({ player, score, weekAvg, allTimeAvg, wins }) => {
         const row = document.createElement("div");
         row.className = "entry-row";
 
         row.innerHTML = `
             <span class="entry-identity">
-                <span class="rank-badge">#${rank}</span>
                 ${avatarHtml(player)}
                 <span class="entry-name">${player}</span>
             </span>
-            <span class="stat-value stat-today status-done">${score}</span>
-            ${buildStatsHtml(player)}
+            <span class="stat-value stat-today status-done${sortedCol("score")}">${score}</span>
+            <span class="stat-value${sortedCol("weekAvg")}">${formatAverage(weekAvg)}</span>
+            <span class="stat-value${sortedCol("allTimeAvg")}">${formatAverage(allTimeAvg)}</span>
+            <span class="stat-value ${wins > 0 ? "stat-wins" : "stat-wins-zero"}${sortedCol("wins")}">${wins}</span>
         `;
 
         container.appendChild(row);
     });
 
     pending.forEach(player => {
+        const wins = winCounts[player] || 0;
         const row = document.createElement("div");
         row.className = "entry-row";
 
         row.innerHTML = `
             <span class="entry-identity">
-                <span class="rank-badge rank-badge-empty"></span>
                 ${avatarHtml(player)}
                 <span class="entry-name">${player}</span>
             </span>
-            <span class="stat-value stat-today status-pending" title="Pending">⏳</span>
-            ${buildStatsHtml(player)}
+            <span class="stat-value stat-today status-pending${sortedCol("score")}" title="Pending">⏳</span>
+            <span class="stat-value${sortedCol("weekAvg")}">${formatAverage(computeWeekAverage(player, weekStart))}</span>
+            <span class="stat-value${sortedCol("allTimeAvg")}">${formatAverage(computeAllTimeAverage(player))}</span>
+            <span class="stat-value ${wins > 0 ? "stat-wins" : "stat-wins-zero"}${sortedCol("wins")}">${wins}</span>
         `;
 
         container.appendChild(row);
@@ -413,6 +419,52 @@ function renderTodayEntries() {
     if (forceBtn) {
         forceBtn.classList.toggle("hidden", isDayFinalized(today, todayEntries.length));
     }
+}
+
+function buildTodayEntriesHeader() {
+    const header = document.createElement("div");
+    header.className = "entry-row entry-header";
+
+    header.appendChild(document.createElement("span")).className = "entry-identity";
+
+    Object.entries(TODAY_ENTRIES_COLUMNS).forEach(([key, label]) => {
+        const isActive = todayEntriesSort.key === key;
+        const arrow = isActive ? (todayEntriesSort.direction === "desc" ? "▼" : "▲") : "";
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `stat-label sort-label${isActive ? " sort-active" : ""}`;
+        button.innerHTML = `${label}${arrow ? ` <span class="sort-arrow">${arrow}</span>` : ""}`;
+        button.addEventListener("click", () => {
+            if (todayEntriesSort.key === key) {
+                todayEntriesSort.direction = todayEntriesSort.direction === "desc" ? "asc" : "desc";
+            } else {
+                todayEntriesSort = { key, direction: "desc" };
+            }
+            renderTodayEntries();
+        });
+
+        header.appendChild(button);
+    });
+
+    return header;
+}
+
+// Sorts today's ranked (already-entered) rows in place. Missing stats
+// (nobody has played enough games yet) always sink to the bottom rather
+// than flip-flopping with the sort direction.
+function sortTodayEntries(ranked) {
+    const { key, direction } = todayEntriesSort;
+    const multiplier = direction === "desc" ? -1 : 1;
+
+    ranked.sort((a, b) => {
+        const aValue = a[key];
+        const bValue = b[key];
+        if (aValue === null && bValue === null) return 0;
+        if (aValue === null) return 1;
+        if (bValue === null) return -1;
+        return (aValue - bValue) * multiplier;
+    });
 }
 
 // Player's average score across whichever of their own days fall within

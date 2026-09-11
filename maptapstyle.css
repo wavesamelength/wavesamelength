@@ -353,24 +353,6 @@ button:disabled {
     min-width: 0;
 }
 
-.rank-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    color: #9ca3af;
-    font-size: 12px;
-    font-weight: 700;
-    flex-shrink: 0;
-}
-
-.rank-badge-empty {
-    background: transparent;
-}
-
 .entry-name {
     font-size: 16px;
     overflow: hidden;
@@ -387,12 +369,39 @@ button:disabled {
     text-align: center;
 }
 
+.sort-label {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+}
+
+.sort-label:hover {
+    color: #9ca3af;
+}
+
+.sort-label.sort-active {
+    color: #e5e7eb;
+}
+
+.sort-arrow {
+    font-size: 9px;
+}
+
 .stat-value {
     text-align: center;
     font-size: 14px;
     font-weight: 600;
     color: #e5e7eb;
     white-space: nowrap;
+}
+
+.stat-value.sort-active {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 4px 0;
 }
 
 .stat-today.status-done {
@@ -546,12 +555,6 @@ footer {
 
     .entry-name {
         font-size: 14px;
-    }
-
-    .rank-badge {
-        width: 20px;
-        height: 20px;
-        font-size: 10px;
     }
 
     .avatar {
