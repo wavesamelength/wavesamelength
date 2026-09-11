@@ -328,6 +328,7 @@ function entriesForDate(dateStr) {
 function renderAll() {
     renderTodayEntries();
     renderStandings();
+    renderHorseRace();
     renderPreviousWinners();
 }
 
@@ -509,27 +510,8 @@ function daysFinalizedSoFar(weekStart) {
 // ======================================
 
 function renderStandings() {
-    const table = document.getElementById("leaderboard");
-    if (!table) return;
-
     const weekStart = getLeagueWeek();
     const standings = computeWeekStandings(weekStart);
-    const totalDays = daysFinalizedSoFar(weekStart);
-
-    table.innerHTML = "";
-
-    standings.forEach((row, index) => {
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${avatarHtml(row.player)} ${row.player}</td>
-            <td>${row.points}</td>
-            <td class="played-cell">${row.played}/${totalDays}</td>
-        `;
-
-        table.appendChild(tr);
-    });
 
     checkWinner(weekStart, standings);
 }
@@ -557,6 +539,50 @@ function checkWinner(weekStart, standings) {
     card.classList.remove("hidden");
     document.getElementById("winner-name").innerHTML = `${avatarHtml(winner.player)} ${winner.player}`;
     document.getElementById("winner-score").innerText = `${winner.points} points`;
+}
+
+// ======================================
+// WEEKLY RACE
+// (horse-race style view of this week's standings - each player's bar
+// runs to their share of the current leader's points)
+// ======================================
+
+function renderHorseRace() {
+    const container = document.getElementById("horse-race");
+    if (!container) return;
+
+    const weekStart = getLeagueWeek();
+    const standings = computeWeekStandings(weekStart);
+    const totalGames = daysFinalizedSoFar(weekStart);
+
+    container.innerHTML = "";
+
+    if (!standings.length || standings[0].points === 0) {
+        container.innerHTML = "No scores yet this week 🐎";
+        return;
+    }
+
+    const leadPoints = standings[0].points;
+
+    standings.forEach(({ player, points, played }) => {
+        const pct = Math.round((points / leadPoints) * 100);
+
+        const row = document.createElement("div");
+        row.className = "race-row";
+
+        row.innerHTML = `
+            <span class="race-label">${avatarHtml(player)} ${player}</span>
+            <div class="race-track">
+                <div class="race-fill" style="width:${pct}%; background:${avatarColour(player)}">
+                    <span class="race-value">${points} pt${points === 1 ? "" : "s"}</span>
+                    <span class="race-horse">🏇</span>
+                </div>
+            </div>
+            <span class="race-played">${played}/${totalGames} game${totalGames === 1 ? "" : "s"}</span>
+        `;
+
+        container.appendChild(row);
+    });
 }
 
 // ======================================
