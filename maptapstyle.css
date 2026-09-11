@@ -303,6 +303,7 @@ button:disabled {
 }
 
 .modal {
+    position: relative;
     background: #1f2937;
     border-radius: 18px;
     padding: 25px;
@@ -329,6 +330,74 @@ button:disabled {
 .modal-actions button {
     flex: 1;
     margin-top: 0;
+}
+
+.modal-wide {
+    max-width: 680px;
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    margin: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #e5e7eb;
+    font-size: 14px;
+    line-height: 1;
+}
+
+/* PLAYER STATS MODAL */
+
+.stat-tabs {
+    display: flex;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.stat-tab {
+    flex: 1;
+    width: auto;
+    margin-top: 0;
+    padding: 10px 6px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #d1d5db;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.stat-tab.active {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+}
+
+.chart-wrap {
+    position: relative;
+}
+
+#player-stats-chart {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.chart-empty {
+    text-align: center;
+    color: #9ca3af;
+    padding: 60px 0;
+}
+
+.entry-row-clickable {
+    cursor: pointer;
+}
+
+.entry-row-clickable:hover {
+    background: rgba(255, 255, 255, 0.09);
 }
 
 /* TODAY'S ENTRIES */
@@ -456,7 +525,8 @@ button:disabled {
 }
 
 .race-track {
-    position: relative;
+    display: flex;
+    align-items: center;
     flex: 1;
     height: 34px;
     background: rgba(255, 255, 255, 0.06);
@@ -464,11 +534,9 @@ button:disabled {
 }
 
 .race-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
     height: 100%;
     min-width: 74px;
+    flex-shrink: 0;
     border-radius: 999px;
     display: flex;
     align-items: center;
@@ -486,9 +554,7 @@ button:disabled {
 }
 
 .race-value-outside {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    flex-shrink: 0;
     margin-left: 8px;
     color: #f9fafb;
 }

@@ -379,7 +379,8 @@ function renderTodayEntries() {
 
     ranked.forEach(({ player, score, weekAvg, allTimeAvg, wins }) => {
         const row = document.createElement("div");
-        row.className = "entry-row";
+        row.className = "entry-row entry-row-clickable";
+        row.addEventListener("click", () => openPlayerStatsModal(player));
 
         row.innerHTML = `
             <span class="entry-identity">
@@ -398,7 +399,8 @@ function renderTodayEntries() {
     pending.forEach(player => {
         const wins = winCounts[player] || 0;
         const row = document.createElement("div");
-        row.className = "entry-row";
+        row.className = "entry-row entry-row-clickable";
+        row.addEventListener("click", () => openPlayerStatsModal(player));
 
         row.innerHTML = `
             <span class="entry-identity">
@@ -696,7 +698,7 @@ function renderHorseRace() {
                     ${isNarrow ? "" : `<span class="race-value">${valueLabel}</span>`}
                     <span class="race-horse">🐎</span>
                 </div>
-                ${isNarrow ? `<span class="race-value race-value-outside" style="left:${pct}%">${valueLabel}</span>` : ""}
+                ${isNarrow ? `<span class="race-value race-value-outside">${valueLabel}</span>` : ""}
             </div>
             <span class="race-played">${played}/${totalGames} game${totalGames === 1 ? "" : "s"}</span>
         `;
@@ -734,6 +736,242 @@ function computeWinCounts() {
 }
 
 // ======================================
+// PLAYER STATS MODAL
+// (a graph of one player's stats over time, opened by clicking their row
+// in the Player Summary table - each of the 3 stats it can show is
+// plotted with one point per league week)
+// ======================================
+
+const PLAYER_STAT_TYPES = {
+    weekAvg: {
+        color: "#22d3ee",
+        compute: computePlayerWeeklyAverageSeries,
+        yFormat: value => Math.round(value),
+    },
+    allTimeAvg: {
+        color: "#a78bfa",
+        compute: computePlayerAllTimeAverageSeries,
+        yFormat: value => Math.round(value),
+    },
+    wins: {
+        color: "#fbbf24",
+        compute: computePlayerWinsSeries,
+        yFormat: value => Math.round(value),
+        yMin: 0,
+    },
+};
+
+let playerStatsModalState = { player: null, stat: "weekAvg" };
+
+// Every league week that has at least one score, oldest first.
+function getAllLeagueWeeks() {
+    const weeks = new Set(results.map(r => getLeagueWeek(r.date)));
+    return [...weeks].sort();
+}
+
+// The player's week-average score for each week they actually played -
+// weeks they sat out are left out rather than plotted as zero.
+function computePlayerWeeklyAverageSeries(player) {
+    return getAllLeagueWeeks()
+        .map(weekStart => ({ weekStart, value: computeWeekAverage(player, weekStart) }))
+        .filter(point => point.value !== null);
+}
+
+// How the player's all-time average moved week by week, i.e. their
+// cumulative average across every score up to and including that week.
+function computePlayerAllTimeAverageSeries(player) {
+    const series = [];
+
+    getAllLeagueWeeks().forEach(weekStart => {
+        const weekEnd = addDays(weekStart, 6);
+        const scores = results
+            .filter(r => r.player === player && r.date <= weekEnd)
+            .map(r => r.score);
+
+        if (!scores.length) return;
+
+        series.push({ weekStart, value: scores.reduce((sum, s) => sum + s, 0) / scores.length });
+    });
+
+    return series;
+}
+
+// Cumulative weekly-win count over time - mirrors computeWinCounts()
+// (legacy baseline + one per completed week they won outright).
+function computePlayerWinsSeries(player) {
+    const currentWeek = getLeagueWeek();
+    let cumulative = legacyWins[player] || 0;
+    const series = [];
+
+    getAllLeagueWeeks().forEach(weekStart => {
+        if (weekStart === currentWeek) return;
+
+        const winner = computeWeekStandings(weekStart)[0];
+        if (winner && winner.player === player && winner.points > 0) {
+            cumulative += 1;
+        }
+
+        series.push({ weekStart, value: cumulative });
+    });
+
+    return series;
+}
+
+function openPlayerStatsModal(player) {
+    const modal = document.getElementById("player-stats-modal");
+    if (!modal) return;
+
+    playerStatsModalState = { player, stat: playerStatsModalState.stat };
+    modal.classList.remove("hidden");
+    renderPlayerStatsModal();
+}
+
+function closePlayerStatsModal() {
+    document.getElementById("player-stats-modal")?.classList.add("hidden");
+}
+
+function initPlayerStatsModal() {
+    const modal = document.getElementById("player-stats-modal");
+    const closeBtn = document.getElementById("player-stats-close");
+    const tabs = document.getElementById("player-stats-tabs");
+
+    if (!modal || !closeBtn || !tabs) return;
+
+    closeBtn.addEventListener("click", closePlayerStatsModal);
+
+    modal.addEventListener("click", event => {
+        if (event.target === modal) closePlayerStatsModal();
+    });
+
+    tabs.querySelectorAll(".stat-tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+            playerStatsModalState.stat = tab.dataset.stat;
+            renderPlayerStatsModal();
+        });
+    });
+}
+
+function renderPlayerStatsModal() {
+    const { player, stat } = playerStatsModalState;
+    if (!player) return;
+
+    const nameEl = document.getElementById("player-stats-name");
+    const svg = document.getElementById("player-stats-chart");
+    const emptyEl = document.getElementById("player-stats-empty");
+    const tabs = document.getElementById("player-stats-tabs");
+
+    if (!nameEl || !svg || !emptyEl || !tabs) return;
+
+    nameEl.innerHTML = `${avatarHtml(player)} ${player}`;
+
+    tabs.querySelectorAll(".stat-tab").forEach(tab => {
+        tab.classList.toggle("active", tab.dataset.stat === stat);
+    });
+
+    const { compute, color, yFormat, yMin } = PLAYER_STAT_TYPES[stat];
+    const series = compute(player).map(point => ({
+        label: formatDate(point.weekStart),
+        value: point.value,
+    }));
+
+    if (!series.length) {
+        svg.classList.add("hidden");
+        emptyEl.classList.remove("hidden");
+        return;
+    }
+
+    svg.classList.remove("hidden");
+    emptyEl.classList.add("hidden");
+    renderLineChart(svg, series, { color, yFormat, yMin });
+}
+
+// Picks a "nice" gridline step (1/2/5/10 x a power of ten) for a value
+// range, the same rounding a spreadsheet's auto axis would use - so
+// gridlines land on round numbers instead of arbitrary padded fractions.
+function niceStep(min, max, targetTickCount = 5) {
+    const range = (max - min) || Math.max(Math.abs(max), 1);
+    const rawStep = range / (targetTickCount - 1);
+    const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+    const residual = rawStep / magnitude;
+
+    if (residual > 5) return 10 * magnitude;
+    if (residual > 2) return 5 * magnitude;
+    if (residual > 1) return 2 * magnitude;
+    return magnitude;
+}
+
+// Draws a line chart into an <svg> from scratch (no charting library in
+// this project) - one point per week, with a tick + rotated label per point.
+function renderLineChart(svg, points, { color, yFormat, yMin = null }) {
+    const width = 640;
+    const height = 320;
+    const marginLeft = 46;
+    const marginRight = 20;
+    const marginTop = 20;
+    const marginBottom = 56;
+    const plotWidth = width - marginLeft - marginRight;
+    const plotHeight = height - marginTop - marginBottom;
+
+    const values = points.map(p => p.value);
+    const dataMin = yMin !== null ? Math.min(yMin, ...values) : Math.min(...values);
+    const dataMax = Math.max(...values);
+
+    // Ticks snap to "nice" round numbers so a gridline's label always
+    // matches its physical position - e.g. a value of exactly 3 lands
+    // right on a "3" gridline instead of between "3" and a padded "3.3".
+    const step = niceStep(dataMin, dataMax);
+    let minValue = Math.floor(dataMin / step) * step;
+    let maxValue = Math.ceil(dataMax / step) * step;
+
+    // A little headroom so points at the very edge of the data aren't
+    // flush against the top/bottom of the chart.
+    if (maxValue === dataMax) maxValue += step;
+    if (minValue === dataMin) minValue -= step;
+    if (yMin !== null) minValue = Math.max(yMin, minValue);
+
+    const tickValues = [];
+    for (let v = minValue; v <= maxValue + step / 2; v += step) {
+        tickValues.push(Math.round(v * 1e6) / 1e6);
+    }
+
+    const xFor = i => points.length === 1
+        ? marginLeft + plotWidth / 2
+        : marginLeft + (plotWidth * i) / (points.length - 1);
+    const yFor = value => marginTop + plotHeight - ((value - minValue) / (maxValue - minValue)) * plotHeight;
+
+    const linePath = points
+        .map((p, i) => `${i === 0 ? "M" : "L"} ${xFor(i).toFixed(1)} ${yFor(p.value).toFixed(1)}`)
+        .join(" ");
+
+    const gridLines = tickValues.map(value => {
+        const y = yFor(value);
+        return `
+            <line x1="${marginLeft}" y1="${y.toFixed(1)}" x2="${width - marginRight}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+            <text x="${marginLeft - 10}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="11" fill="#9ca3af">${yFormat(value)}</text>
+        `;
+    }).join("");
+
+    const xLabels = points.map((p, i) => {
+        const x = xFor(i).toFixed(1);
+        const y = height - marginBottom + 16;
+        return `<text x="${x}" y="${y}" text-anchor="end" font-size="10" fill="#9ca3af" transform="rotate(-40 ${x} ${y})">${p.label}</text>`;
+    }).join("");
+
+    const dots = points.map((p, i) => {
+        const x = xFor(i).toFixed(1);
+        const y = yFor(p.value).toFixed(1);
+        return `<circle cx="${x}" cy="${y}" r="4" fill="${color}"><title>${p.label}: ${yFormat(p.value)}</title></circle>`;
+    }).join("");
+
+    svg.innerHTML = `
+        ${gridLines}
+        <path d="${linePath}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+        ${dots}
+        ${xLabels}
+    `;
+}
+
+// ======================================
 // START APP
 // ======================================
 
@@ -742,6 +980,7 @@ async function start() {
     await Promise.all([loadPlayers(), loadLegacyWins()]);
     initEntryForm();
     initForceFinalizeButton();
+    initPlayerStatsModal();
     listenForResults();
     listenForForcedDays();
 }
