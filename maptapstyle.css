@@ -30,6 +30,13 @@ header h1 {
     letter-spacing: 2px;
 }
 
+.title-logo {
+    height: 1em;
+    width: auto;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
 #week-title {
     color: #9ca3af;
     font-size: 18px;
