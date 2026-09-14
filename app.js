@@ -366,54 +366,47 @@ function renderTodayEntries() {
     // of which column the table is currently sorted by.
     const ranked = rankDay(todayEntries).map(entry => ({
         ...entry,
+        pending: false,
         weekAvg: computeWeekAverage(entry.player, weekStart),
         allTimeAvg: computeAllTimeAverage(entry.player),
         wins: winCounts[entry.player] || 0,
     }));
-    sortTodayEntries(ranked);
 
     const pending = players
         .filter(player => !enteredPlayers.has(player))
-        .sort((a, b) => a.localeCompare(b));
+        .map(player => ({
+            player,
+            score: null,
+            pending: true,
+            weekAvg: computeWeekAverage(player, weekStart),
+            allTimeAvg: computeAllTimeAverage(player),
+            wins: winCounts[player] || 0,
+        }));
+
+    const rows = sortTodayEntries(ranked, pending);
 
     container.innerHTML = "";
     container.appendChild(buildTodayEntriesHeader());
 
     const sortedCol = key => (todayEntriesSort.key === key ? " sort-active" : "");
 
-    ranked.forEach(({ player, score, weekAvg, allTimeAvg, wins }) => {
+    rows.forEach(({ player, score, weekAvg, allTimeAvg, wins, pending }) => {
         const row = document.createElement("div");
         row.className = "entry-row entry-row-clickable";
         row.addEventListener("click", () => openPlayerStatsModal(player));
+
+        const scoreCell = pending
+            ? `<span class="stat-value stat-today status-pending${sortedCol("score")}" title="Pending">⏳</span>`
+            : `<span class="stat-value stat-today status-done${sortedCol("score")}">${score}</span>`;
 
         row.innerHTML = `
             <span class="entry-identity">
                 ${avatarHtml(player)}
                 <span class="entry-name">${player}</span>
             </span>
-            <span class="stat-value stat-today status-done${sortedCol("score")}">${score}</span>
+            ${scoreCell}
             <span class="stat-value${sortedCol("weekAvg")}">${formatAverage(weekAvg)}</span>
             <span class="stat-value${sortedCol("allTimeAvg")}">${formatAverage(allTimeAvg)}</span>
-            <span class="stat-value ${wins > 0 ? "stat-wins" : "stat-wins-zero"}${sortedCol("wins")}">${wins}</span>
-        `;
-
-        container.appendChild(row);
-    });
-
-    pending.forEach(player => {
-        const wins = winCounts[player] || 0;
-        const row = document.createElement("div");
-        row.className = "entry-row entry-row-clickable";
-        row.addEventListener("click", () => openPlayerStatsModal(player));
-
-        row.innerHTML = `
-            <span class="entry-identity">
-                ${avatarHtml(player)}
-                <span class="entry-name">${player}</span>
-            </span>
-            <span class="stat-value stat-today status-pending${sortedCol("score")}" title="Pending">⏳</span>
-            <span class="stat-value${sortedCol("weekAvg")}">${formatAverage(computeWeekAverage(player, weekStart))}</span>
-            <span class="stat-value${sortedCol("allTimeAvg")}">${formatAverage(computeAllTimeAverage(player))}</span>
             <span class="stat-value ${wins > 0 ? "stat-wins" : "stat-wins-zero"}${sortedCol("wins")}">${wins}</span>
         `;
 
@@ -455,14 +448,25 @@ function buildTodayEntriesHeader() {
     return header;
 }
 
-// Sorts today's ranked (already-entered) rows in place. Missing stats
-// (nobody has played enough games yet) always sink to the bottom rather
-// than flip-flopping with the sort direction.
-function sortTodayEntries(ranked) {
+// Combines and sorts today's entered ("ranked") and not-yet-entered
+// ("pending") rows for display. Sorting by a stat that exists regardless of
+// whether someone's played today (week/all-time average, wins) considers
+// everyone together, so the sort isn't limited to just today's players.
+// Sorting by today's score only makes sense for players who've actually
+// entered, so pending players stay grouped below, alphabetically, same as
+// before. Missing stats always sink to the bottom rather than flip-flopping
+// with the sort direction.
+function sortTodayEntries(ranked, pending) {
     const { key, direction } = todayEntriesSort;
     const multiplier = direction === "desc" ? -1 : 1;
 
-    ranked.sort((a, b) => {
+    if (key === "score") {
+        const sortedRanked = [...ranked].sort((a, b) => (a.score - b.score) * multiplier);
+        const sortedPending = [...pending].sort((a, b) => a.player.localeCompare(b.player));
+        return [...sortedRanked, ...sortedPending];
+    }
+
+    return [...ranked, ...pending].sort((a, b) => {
         const aValue = a[key];
         const bValue = b[key];
         if (aValue === null && bValue === null) return 0;
