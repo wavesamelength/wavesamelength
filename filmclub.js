@@ -24,7 +24,7 @@ import {
 //   https://www.omdbapi.com/apikey.aspx
 // then paste it in below.
 
-const OMDB_API_KEY = "YOUR_OMDB_API_KEY_HERE";
+const OMDB_API_KEY = "8e950e92";
 
 // A month in here reuses another month's whole pick (chooser + film)
 // instead of drawing/searching again - e.g. July's film running into August.
